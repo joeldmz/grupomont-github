@@ -1,0 +1,104 @@
+<template>
+  <v-card>
+    <v-card-title>
+      Taixa de Conversão - lead x oportunidade
+    </v-card-title>
+
+    <v-card-text>
+      <apexchart
+        v-if="data"
+        type="bar"
+        height="400"
+        :options="chartOptions"
+        :series="series"
+      />
+    </v-card-text>
+  </v-card>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref, watch } from 'vue'
+
+interface Props {
+  title?: string,
+  categories?: any[],
+  data?: any[]
+}
+
+const key = ref(0)
+
+const props = defineProps<Props>()
+
+watch(() => props.data, (data: any) => {
+    series.value = [
+        {
+            name: 'Percentaje Conversao',
+            data: data
+        }
+    ]
+
+    chartOptions.value = {
+        chart: {
+        type: 'bar',
+        toolbar: {
+        show: true,
+        },
+    },
+
+    plotOptions: {
+        bar: {
+        horizontal: false,
+        barHeight: '10%',
+        borderRadius: 6,
+        },
+    },
+
+    dataLabels: {
+        enabled: true,
+        formatter: (val: any) => `${val ? val.toFixed(1) : 0}%`,
+    },
+
+    xaxis: {
+        categories: props.categories,
+        max: 100,
+    },
+    }
+
+    console.log(props.data)
+    key.value ++
+})
+
+const series = ref([
+  {
+    name: 'Percentaje Conversao',
+    data: props.data
+  }
+])
+
+const chartOptions = ref({
+  chart: {
+    type: 'bar',
+    toolbar: {
+      show: false,
+    },
+  },
+
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      barHeight: '10%',
+      borderRadius: 6,
+    },
+  },
+
+  dataLabels: {
+    enabled: true,
+    formatter: (val: any) => `${val ? val.toFixed(1) : 0}%`,
+  },
+
+  xaxis: {
+    categories: props.categories,
+    max: 100,
+  },
+});
+</script>
