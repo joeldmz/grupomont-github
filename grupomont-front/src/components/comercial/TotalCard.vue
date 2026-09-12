@@ -1,28 +1,22 @@
 <template>
-  <v-card
-    class="kpi-card pa-5"
-    elevation="1"
-  >
-        <!-- Título -->
-        <div class="text-center">
-            <div class="text-subtitle-2 text-medium-emphasis">
-            Total de oportunidades
-        </div>
+  <v-card style="height: 100%;">
+    <v-card-item class="pb-0">
+        <v-card-title class="font-weight-bold">
+            Status das Oportunidades
+        </v-card-title>
 
-        <!-- Valor principal -->
-        <div class="pt-2">
-            <span class="kpi-value">
-                {{ data.total_oportunidades }}
-            </span>
-        </div>
-     </div>
-    
+        <v-card-subtitle>
+            Distribuição das oportunidades por status
+        </v-card-subtitle>
+    </v-card-item>
+
+    <v-divider></v-divider>
 
     <v-card-text>
       <!-- Status -->
-      <div class="py-3">
+      <div>
         <!-- Ganadas -->
-        <div class="d-flex justify-space-between py-4">
+        <div class="d-flex justify-space-between py-6">
           <div class="d-flex align-center">
               <v-icon
                 class="px-6"
@@ -42,13 +36,22 @@
             </div>
           </div>
 
-          <span class="text-h5 font-bold pt-3" style="font-weight: bold; font-size: 16px;">
-            {{ data.oportunidades_ganhas }}
-          </span>
+          <div class="text-right">
+            <span class="text-h5 font-bold" style="font-weight: bold; font-size: 16px;">
+              {{ data.oportunidades_ganhas }}
+            </span>
+            <br>
+            <span class="text-h5 font-bold" style="font-weight: bold; font-size: 16px;">
+              R$ {{ data.valor_realizado}}
+            </span>
+          </div>
+         
         </div>
 
+        <v-divider></v-divider>
+
         <!-- Abiertas -->
-        <div class="status-item d-flex justify-space-between py-4">
+        <div class="status-item d-flex justify-space-between py-6">
           <div class="d-flex align-center">
               <v-icon
                 color="blue"
@@ -76,14 +79,21 @@
               </v-chip> -->
             </div>
           </div>
-
-          <span class="pt-4" style="font-weight: bold; font-size: 16px;">
-            {{ data.oportunidades_abertas }}
-          </span>
+          <div class="text-right">
+            <span style="font-weight: bolder; font-size: 16px;">
+              {{ data.oportunidades_abertas }}
+            </span>
+            <br>
+            <span style="font-weight: bold; font-size: 16px;">
+              R$ {{ data.valor_potencial }}
+            </span>
+          </div>
         </div>
 
+        <v-divider></v-divider>
+
         <!-- Perdidas -->
-        <div class="status-item d-flex justify-space-between py-4">
+        <div class="status-item d-flex justify-space-between py-6">
           <div class="d-flex align-center">
               <v-icon
                 color="red"
@@ -103,9 +113,15 @@
             </div>
           </div>
 
-          <span class="pt-3" style="font-weight: bold; font-size: 16px;">
+          <div class="text-right text-error">
+            <span style="font-weight: bold; font-size: 16px;">
             {{ data.oportunidades_perdidas }}
-          </span>
+            </span>
+            <br>
+            <span style="font-weight: bold; font-size: 16px;">
+              - R$ {{ data.valor_perdido }}
+            </span>
+          </div>
         </div>
 
       </div>
@@ -139,15 +155,3 @@ const formatCurrency = (value: any) => {
 }
 
 </script>
-
-<style scoped>
-.kpi-card {
-  height: 100%;
-}
-
-.kpi-value {
-  font-size: 38px;
-  font-weight: 600;
-  line-height: 1.1;
-}
-</style>

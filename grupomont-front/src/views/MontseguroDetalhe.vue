@@ -59,6 +59,9 @@
       <v-col cols="12" md="12">
           <ContratacaoChart :categories="getData('periodo')" :data="getData('contratacoes')"/>
       </v-col>
+       <v-col cols="12" md="3">
+         <StatusList title="status" />
+       </v-col>
     </v-row>
   </v-container>
 </template>
@@ -75,6 +78,7 @@ import { getFunilByUnidade } from '@/services/funilService.ts'
 import ContratacaoChart from '@/components/montseguro/ContratacaoChart.vue'
 import { getContratacaoByOperadora, getContratacaoByperiodo, getContratacaoByPlano } from '@/services/contratacaoService.ts'
 import OperadoraCard from '@/components/montseguro/OperadoraCard.vue'
+import StatusList from '@/components/common/StatusList.vue'
 
 
 const totalClientes = ref<any>({})

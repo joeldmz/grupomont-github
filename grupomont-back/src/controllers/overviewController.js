@@ -2,6 +2,7 @@ import { dbquery } from '../config/database.js';
 
 export const getOportunidadePipeline = async(req, res, next) => {
     try {
+        const {status, start_date, end_date } = req.query;
         let query = `
             SELECT
                 COUNT(*) AS total_oportunidades,
@@ -20,21 +21,48 @@ export const getOportunidadePipeline = async(req, res, next) => {
                     ),
                     2
                 ) AS probabilidade_media_abertas,
-                ROUND(
+                COALESCE(
                     SUM(
-                        COALESCE(o.valor_estimado, 0) *
-                        COALESCE(o.probabilidade, 0) / 100
+                        COALESCE(o.valor_estimado, 0)
                     ) FILTER (
                         WHERE LOWER(o.status) = 'aberta'
                     ),
-                    2
+                    0
+                ) AS valor_potencial,
+                 COALESCE(
+                    SUM(
+                        COALESCE(o.valor_estimado, 0)
+                    ) FILTER (
+                        WHERE LOWER(o.status) = 'ganha'
+                    ),
+                    0
+                ) AS valor_realizado,
+                 COALESCE(
+                    SUM(
+                        COALESCE(o.valor_estimado, 0)
+                    ) FILTER (
+                        WHERE LOWER(o.status) = 'perdida'
+                    ),
+                    0
+                ) AS valor_perdido,
+                COALESCE(
+                    SUM(
+                        COALESCE(o.valor_estimado, 0)
+                        * COALESCE(o.probabilidade, 0) / 100
+                    ) FILTER (
+                        WHERE LOWER(o.status) = 'aberta'
+                    ),
+                    0
                 ) AS valor_ponderado_abertas
             FROM oportunidade o
             JOIN campanha c
                 ON c.id = o.campanha_id
-            WHERE c.status = 'Ativa';
+            WHERE
+                ($1::varchar IS NULL OR LOWER(c.status) = LOWER($1::varchar))
+                AND ($2::date IS NULL OR o.data_criacao >= $2::date)
+                AND ($3::date IS NULL OR o.data_criacao < $3::date);
         `
-        const dbresponse = await dbquery(query);
+        const dbresponse = await dbquery(query, [status, start_date, end_date]);
         res.json(dbresponse.rows.length > 0 ? dbresponse.rows[0] : {});
     } catch (error) {
         next(error);

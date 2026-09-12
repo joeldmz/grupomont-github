@@ -44,11 +44,11 @@
           <CampanhaList :data="campanhas"/>
       </v-col>
 
-      <v-col cols="6">
+      <v-col cols="12" md="6">
           <UnidadePerformance :data="marketingPerformance"/>
       </v-col>
 
-      <v-col cols="6">
+      <v-col cols="12" md="6">
           <CanalChart :data="canalPerformance"/>
       </v-col>
     </v-row>

@@ -15,8 +15,8 @@ export async function getTaixaConversao(): Promise<any[]> {
   return response.data
 }
 
-export async function getPipelineOportunidade(): Promise<any[]> {
-  const response = await api.get<any[]>('/overview/pipeline')
+export async function getPipelineOportunidade(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/overview/pipeline', { params })
   return response.data
 }
 

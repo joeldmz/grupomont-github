@@ -97,3 +97,93 @@ export const getPipelineByUnidade = async(req, res, next) => {
         next(error);
     }
 }
+
+export const getOportunidadeByEquipe = async(req, res, next) => {
+    try {
+        const { start_date, end_date } = req.query
+        let query = `
+        WITH oportunidades AS (
+            SELECT
+                e.id AS equipe_id,
+                e.nome AS equipe,
+
+                COUNT(o.id) AS oportunidades,
+
+                COUNT(o.id) FILTER (
+                    WHERE LOWER(o.status) = 'ganha'
+                ) AS oportunidades_ganhas,
+
+                COALESCE(
+                    SUM(o.valor_estimado) FILTER (
+                        WHERE LOWER(o.status) = 'aberta'
+                    ),
+                    0
+                ) AS pipeline
+
+            FROM equipe e
+
+            LEFT JOIN consultor c
+                ON c.equipe_id = e.id
+
+            LEFT JOIN oportunidade o
+                ON o.consultor_id = c.id
+                AND ($1::date IS NULL OR o.data_criacao >= $1::date)
+                AND ($2::date IS NULL OR o.data_criacao < $2::date)
+
+            GROUP BY
+                e.id,
+                e.nome
+        ),
+
+        receitas AS (
+            SELECT
+                c.equipe_id,
+                COALESCE(SUM(r.valor), 0) AS valor_realizado
+
+            FROM receita r
+
+            JOIN oportunidade o
+                ON o.id = r.oportunidade_id
+
+            JOIN consultor c
+                ON c.id = o.consultor_id
+
+            WHERE
+                r.status = 'Realizada'
+                AND ($1::date IS NULL OR r.data >= $1::date)
+                AND ($2::date IS NULL OR r.data < $2::date)
+
+            GROUP BY
+                c.equipe_id
+        )
+
+        SELECT
+            o.equipe_id,
+            o.equipe,
+            o.oportunidades,
+            o.oportunidades_ganhas,
+
+            ROUND(
+                o.oportunidades_ganhas::numeric
+                / NULLIF(o.oportunidades, 0) * 100,
+                2
+            ) AS conversao,
+
+            o.pipeline,
+
+            COALESCE(r.valor_realizado, 0) AS valor_realizado
+
+        FROM oportunidades o
+
+        LEFT JOIN receitas r
+            ON r.equipe_id = o.equipe_id
+
+        ORDER BY
+            valor_realizado DESC;
+        `
+        const dbresponse = await dbquery(query, [start_date, end_date])
+        res.json(dbresponse.rows)
+    } catch (error) {
+        next(error);
+    }
+}

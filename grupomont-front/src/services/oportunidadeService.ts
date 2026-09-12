@@ -15,3 +15,8 @@ export async function getOportunidadeByUnidade(): Promise<any[]> {
   const response = await api.get<any[]>('/oportunidade/unidade')
   return response.data
 }
+
+export async function getOportunidadeByEquipe(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/oportunidade/equipe')
+  return response.data
+}
