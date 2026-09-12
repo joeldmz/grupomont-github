@@ -1,5 +1,11 @@
 import api from './api'
 
+
+export async function getPipelineByUnidade(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/oportunidade/pipeline', { params: params })
+  return response.data
+}
+
 export async function getTotalOportunidade(params?: any): Promise<any[]> {
   const response = await api.get<any[]>('/oportunidade/total', { params: params })
   return response.data

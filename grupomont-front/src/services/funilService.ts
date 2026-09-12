@@ -10,7 +10,12 @@ export async function getHistoricoFunilConsolidado(): Promise<any[]> {
   return response.data
 }
 
-export async function getLeadUnidade(): Promise<any[]> {
+/* export async function getLeadUnidade(): Promise<any[]> {
   const response = await api.get<any[]>('/leads/unidade')
+  return response.data
+} */
+
+export async function getFunilByUnidade(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/funil/unidade', { params })
   return response.data
 }

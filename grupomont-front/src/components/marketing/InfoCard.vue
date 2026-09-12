@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import KpiCard from '../dashboard/KpiCard.vue';
+import KpiCard from './KpiCard.vue';
 
 interface Props {
   data?: any[]

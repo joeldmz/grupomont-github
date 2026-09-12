@@ -57,12 +57,10 @@
 
 <script setup lang="ts">
 import ConversaoCard from '@/components/common/ConversaoCard.vue';
-import KpiCard from '@/components/dashboard/KpiCard.vue';
 import CampanhaList from '@/components/marketing/CampanhaList.vue';
 import CanalChart from '@/components/marketing/CanalChart.vue';
-import PeriodChart from '@/components/marketing/PeriodChart.vue';
+import KpiCard from '@/components/marketing/KpiCard.vue';
 import UnidadePerformance from '@/components/marketing/UnidadePerformance.vue';
-import { abrirDialog } from '@/composables/UseDialog';
 import { getCampanhas, getInvestimento, getResultadoByCanal } from '@/services/campanhaService';
 import { getTotalLead } from '@/services/leadService';
 import { getTotalOportunidade } from '@/services/oportunidadeService';
@@ -95,66 +93,8 @@ onMounted(async () => {
   }
 })
 
-const getDailog = (data: any) => {
-    if(data.id === 1) {
-        openPeriodoInvestimento()
-    }
-}
-
-const openPeriodoInvestimento = () => {
-    abrirDialog(
-        '',
-        'Comparacao de investimento por periodo',
-        [PeriodChart],
-        [],
-        () => {
-        console.log('Confirmado')
-        }
-    )
-}
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR')
 }
-
-const parseData = () => {
-  /**
-   * 
-   * ejemplo
-   * series: [
-    {
-      name: 'Leads',
-      data: [18, 42, 55, 33, 21, 14, 9],
-    },
-    {
-      name: 'Oportunidades',
-      data: [64, 96, 138, 71, 52, 88, 130],
-    },
-    categories: [
-      'Email',
-      'Social',
-      'Search',
-      'Display',
-      'Affiliate',
-      'Referral',
-      'Direct',
-    ]
-  ],
-   */
-  const categorias = canalPerformance.value.map((item: any) => item.canal)
-  const series = canalPerformance.value.map((item: any) => {
-    return {
-      data: [item.leads, item.oportunidades]
-    }
-  })
-
-  console.log('categorias', categorias)
-  console.log('series', series)
-
-  return {
-    categorias,
-    series
-  }
-}
-
 </script>

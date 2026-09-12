@@ -1,14 +1,14 @@
 <template>
-  <v-card>
+  <v-card style="height: 100%;">
     <v-card-title>
-      Taixa de Conversão - lead x oportunidade
+      Contratacao por periodo
     </v-card-title>
 
     <v-card-text>
       <apexchart
         v-if="data"
         type="bar"
-        height="400"
+        height="300"
         :options="chartOptions"
         :series="series"
       />
@@ -28,6 +28,7 @@ interface Props {
 const key = ref(0)
 
 const props = defineProps<Props>()
+const chartOptions = ref<any>({})
 
 watch(() => props.data, (data: any) => {
     series.value = [
@@ -48,7 +49,7 @@ watch(() => props.data, (data: any) => {
     plotOptions: {
         bar: {
         horizontal: false,
-        barHeight: '10%',
+        barHeight: '80%',
         borderRadius: 6,
         },
     },
@@ -63,8 +64,6 @@ watch(() => props.data, (data: any) => {
         max: 100,
     },
     }
-
-    console.log(props.data)
     key.value ++
 })
 
@@ -74,31 +73,4 @@ const series = ref([
     data: props.data
   }
 ])
-
-const chartOptions = ref({
-  chart: {
-    type: 'bar',
-    toolbar: {
-      show: false,
-    },
-  },
-
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      barHeight: '10%',
-      borderRadius: 6,
-    },
-  },
-
-  dataLabels: {
-    enabled: true,
-    formatter: (val: any) => `${val ? val.toFixed(1) : 0}%`,
-  },
-
-  xaxis: {
-    categories: props.categories,
-    max: 100,
-  },
-});
 </script>

@@ -36,7 +36,7 @@
                   </td>
                   <td>{{ value.canais ? value.canais : '-' }}</td>
                   <td>{{ formatDate(value.data_inicio )}} - {{ formatDate(value.data_fim)}}</td>
-                  <td>R$ {{ value.investimento }}</td>
+                  <td style="font-weight: bold;">R$ {{ value.investimento }}</td>
                   <td><v-btn @click="openInfo(value.id)" icon="$vuetify" variant="tonal" size="small"></v-btn></td>
                 </tr>
               </tbody>

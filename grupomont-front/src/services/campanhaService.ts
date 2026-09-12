@@ -1,5 +1,10 @@
 import api from './api'
 
+export async function getTotalCampanhas(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/campanha/total', { params: params })
+  return response.data
+}
+
 export async function getCampanhas(params?: any): Promise<any[]> {
   const response = await api.get<any[]>('/campanha', { params: params })
   return response.data

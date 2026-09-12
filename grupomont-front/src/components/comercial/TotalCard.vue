@@ -143,7 +143,6 @@ const formatCurrency = (value: any) => {
 <style scoped>
 .kpi-card {
   height: 100%;
-  background: #ffffff;
 }
 
 .kpi-value {
