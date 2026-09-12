@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Comercial from '../views/Comercial.vue'
 import Marketing from '../views/Marketing.vue'
-import Empresas from '../views/Empresas.vue'
 import MontseguroDetalhe from '../views/MontseguroDetalhe.vue'
 import Prop5Detalhe from '../views/Prop5Detalhe.vue'
 import TechBraboDetalhe from '../views/TechbraboDetalhe.vue'
@@ -25,11 +24,6 @@ const router = createRouter({
       path: '/marketing',
       name: 'marketing',
       component: Marketing,
-    },
-    {
-      path: '/empresas',
-      name: 'empresas',
-      component: Empresas,
     },
     {
       path: '/empresas/montseguro',

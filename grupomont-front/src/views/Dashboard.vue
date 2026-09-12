@@ -53,7 +53,7 @@
       </v-col>
       <v-col cols="12"
              md="6">
-          <Periodo title="Crecimento por periodo" :data="receitaByPerido"/>
+          <Periodo title="Receita por periodo" :data="receitaByPerido"/>
       </v-col>
       <!-- <v-col cols="12"
              md="4">
