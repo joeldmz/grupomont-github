@@ -48,7 +48,7 @@ export const getTotalOportunidade = async(req, res, next) => {
         const dbresponse = await dbquery(query, [start_date, end_date])
         res.json(dbresponse.rows.length > 0 ? dbresponse.rows[0] : {})
     } catch (error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -94,6 +94,6 @@ export const getPipelineByUnidade = async(req, res, next) => {
         const dbresponse = await dbquery(query, [start_date, end_date])
         res.json(dbresponse.rows)
     } catch (error) {
-        next(error)
+        next(error);
     }
 }

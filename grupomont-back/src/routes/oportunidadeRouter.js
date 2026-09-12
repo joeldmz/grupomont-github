@@ -6,7 +6,7 @@ import {
 
 const router = Router();
 
-router.get('/pipeline', getPipelineByUnidade);//mantener
-router.get('/total', getTotalOportunidade);// mantener
+router.get('/pipeline', getPipelineByUnidade);
+router.get('/total', getTotalOportunidade);
 
 export default router;

@@ -6,7 +6,7 @@ import {
 
 const router = Router();
 
-router.get('/pipeline', getOportunidadePipeline);// mantener
-router.get('/marketing/performance', getMarketingPerformance) //mantener
+router.get('/pipeline', getOportunidadePipeline);
+router.get('/marketing/performance', getMarketingPerformance);
 
 export default router;

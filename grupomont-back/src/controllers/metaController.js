@@ -54,6 +54,6 @@ export const getMetas = async(req, res, next) => {
         const dbresult = await dbquery(query, [unidade_negocio_id, campanha_id, tipo, start_date, end_date, meta_geral]);
         res.json(dbresult.rows);
     } catch (error) {
-        next(error)
+        next(error);
     }
 } 

@@ -151,7 +151,7 @@ export const getContratacaoByOperadora = async(req, res, next) => {
         const dbresponse = await dbquery(query, [start_date, end_date]);
         res.json(dbresponse.rows)
     } catch (error) {
-        
+        next(error);
     }
 }
 

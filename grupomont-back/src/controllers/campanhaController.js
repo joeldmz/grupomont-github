@@ -275,7 +275,7 @@ export const getResultadoByCanal = async(req, res, next) => {
         ORDER BY leads DESC;
         `
 
-        const dbresponse = await dbquery(query, [start_date, end_date])
+        const dbresponse = await dbquery(query, [start_date, end_date]);
         res.json(dbresponse.rows)
 
     } catch (error) {

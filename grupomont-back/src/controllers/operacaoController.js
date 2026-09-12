@@ -53,7 +53,7 @@ export const getMainData = async(req, res, next) => {
         const dbresponse = await dbquery(query, [start_date, end_date])
         res.json(dbresponse.rows.length > 0 ? dbresponse.rows[0] : {})
     } catch (error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -102,7 +102,7 @@ export const getOperacoes = async(req, res, next) => {
         const dbresponse = await dbquery(query, [start_date, end_date])
         res.json(dbresponse.rows)
     } catch (error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -138,6 +138,6 @@ export const getOperacaoByCliente = async(req, res, next) => {
         const dbresponse = await dbquery(query, [id, start_date, end_date])
         res.json(dbresponse.rows)
     } catch (error) {
-        next(error)
+        next(error);
     }
 }

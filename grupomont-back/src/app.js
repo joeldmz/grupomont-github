@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import userRoutes from './routes/userRoutes.js';
+
+//Routes
 import overviewRoutes from './routes/overviewRoutes.js';
 import leadRoutes from './routes/leadRoutes.js';
 import campanhaRoutes from './routes/campanhaRouter.js';
@@ -17,12 +18,15 @@ import metaRoutes from './routes/metaRoute.js';
 
 const app = express();
 
+// api configs
 app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+//Routes
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });

@@ -9,9 +9,9 @@ import {
 
 const router = Router();
 
-router.get('/total', getTotalReceita);// mantener
-router.get('/unidade', getTotalReceitaByUnidade);// mentener
-router.get('/carteira', getValorMensalCarteira);// mentener
-router.get('/periodo', getReceitaByPeriodo) //mantener
+router.get('/total', getTotalReceita);
+router.get('/unidade', getTotalReceitaByUnidade);
+router.get('/carteira', getValorMensalCarteira);
+router.get('/periodo', getReceitaByPeriodo);
 
 export default router;

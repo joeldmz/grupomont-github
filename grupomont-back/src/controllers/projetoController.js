@@ -1,6 +1,6 @@
 import { dbquery } from '../config/database.js';
 
-export const getMainKpis = async(req, res, next) => {
+export const getMain = async(req, res, next) => {
     try {
         const { data_inicio, data_fim } = req.query;
         let query = `

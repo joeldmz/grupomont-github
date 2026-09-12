@@ -9,10 +9,10 @@ import {
 
 const router = Router();
 
-router.get('/', getCampanha);// mantener
-router.get('/total', getTotalCampanhas);// investimento //mantener
-router.get('/info', getCampanhaById);//mantener
+router.get('/', getCampanha);
+router.get('/total', getTotalCampanhas);
+router.get('/info', getCampanhaById);
 router.get('/investimento', getInvestimento);// mantener (ver si ser reemplazado por total)
-router.get('/canal', getResultadoByCanal);//mantener
+router.get('/canal', getResultadoByCanal);
 
 export default router;
