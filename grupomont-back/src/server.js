@@ -15,7 +15,7 @@ const startServer = async () => {
   }
 
   const server = app.listen(PORT, '0.0.0.0',() => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor corriendo en 0.0.0.0:${PORT}`);
     console.log(`📝 Entorno: ${process.env.NODE_ENV}`);
   });
 
