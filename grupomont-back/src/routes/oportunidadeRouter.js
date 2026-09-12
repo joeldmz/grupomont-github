@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import {  getOportunidade, getTotalOportunidade, getOportunidadeByUnidade } from '../controllers/oportunidadeController.js';
+import { 
+    getTotalOportunidade, 
+    getPipelineByUnidade 
+} from '../controllers/oportunidadeController.js';
 
 const router = Router();
 
-router.get('/', getOportunidade);
-router.get('/total', getTotalOportunidade);
-router.get('/unidade', getOportunidadeByUnidade)
+router.get('/pipeline', getPipelineByUnidade);//mantener
+router.get('/total', getTotalOportunidade);// mantener
 
 export default router;

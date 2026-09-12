@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { 
-    getLeads, 
-    getTotalLeadsB, 
+    getLeads,
     getLeadByCampanha ,
     getTotalLead,
     getLeadByUnidade
@@ -12,6 +11,8 @@ const router = Router();
 router.get('/', getLeads);
 router.get('/total', getTotalLead);
 router.get('/unidade', getLeadByUnidade)
+
+//ver
 // router.get('/atingimento', getTotalLeadsByAtingimento)
 // router.get('/campanha', getLeadByCampanha)
 

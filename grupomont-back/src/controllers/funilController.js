@@ -230,3 +230,40 @@ export const getHistoricoFunilConsolidado = async(req, res, next) => {
         next(error);
     }
 }
+
+export const getFunilByUnidade = async(req, res, next) => {
+    try {
+        const { unidade_negocio_id, start_date, end_date } = req.query
+        let query = `
+        SELECT
+            ef.id AS etapa_id,
+            ef.nome AS etapa,
+            COUNT(DISTINCT o.id) AS quantidade_clientes,
+            COALESCE(SUM(o.valor_estimado), 0) AS valor_pipeline,
+            COALESCE(
+                SUM(o.valor_estimado * COALESCE(o.probabilidade, 0) / 100),
+                0
+            ) AS valor_ponderado
+        FROM public.etapa_funil ef
+        LEFT JOIN public.oportunidade o
+            ON o.etapa_id = ef.id
+        AND o.status NOT IN ('Perdida')
+        AND($1::numeric IS NULL OR o.unidade_negocio_id = $1::numeric)
+        AND ($2::date IS NULL OR o.data_criacao >= $2::date)
+        AND ($3::date IS NULL OR o.data_criacao < $3::date)
+        WHERE
+        (
+            $1::numeric IS NULL
+            OR ef.unidade_negocio_id = $1::numeric
+        )
+        GROUP BY
+            ef.id,
+            ef.nome,
+            ef.ordem
+        ORDER BY ef.ordem;`
+        const dbresponse = await dbquery(query, [ unidade_negocio_id, start_date, end_date ])
+        res.json((dbresponse).rows)
+    } catch (error) {
+        next(error);
+    }
+}
