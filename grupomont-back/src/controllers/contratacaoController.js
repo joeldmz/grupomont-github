@@ -44,11 +44,12 @@ export const getContratacoesByPeriodo = async(req, res, next) => {
         let query = `
             WITH meses AS (
                 SELECT generate_series(
-                    DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '${interval} months',
+                    DATE_TRUNC('month', CURRENT_DATE) - ($1::int * INTERVAL '1 month'),
                     DATE_TRUNC('month', CURRENT_DATE),
                     INTERVAL '1 month'
                 )::date AS mes
             ),
+
             contratacoes_por_mes AS (
                 SELECT
                     DATE_TRUNC('month', c.data_contratacao)::date AS mes,
@@ -57,18 +58,23 @@ export const getContratacoesByPeriodo = async(req, res, next) => {
                 INNER JOIN public.oportunidade o
                     ON o.id = c.oportunidade_id
                 WHERE o.unidade_negocio_id = 1
-                AND c.data_contratacao >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '${interval} months'
+                AND c.data_contratacao >= (
+                    DATE_TRUNC('month', CURRENT_DATE)
+                    - ($1::int * INTERVAL '1 month')
+                )
                 GROUP BY DATE_TRUNC('month', c.data_contratacao)
             )
+
             SELECT
                 TO_CHAR(m.mes, 'YYYY-MM') AS periodo,
+                TO_CHAR(m.mes, 'Mon') AS mes,
                 COALESCE(cp.contratacoes, 0) AS contratacoes
             FROM meses m
             LEFT JOIN contratacoes_por_mes cp
                 ON cp.mes = m.mes
             ORDER BY m.mes;
         `
-        const dbresponse = await dbquery(query);
+        const dbresponse = await dbquery(query, [interval]);
         res.json(dbresponse.rows);
     } catch (error) {
         next(error)

@@ -6,11 +6,11 @@
 
     <v-divider></v-divider>
 
-    <div class="d-flex justify-space-around py-6 px-3">
+    <!-- <div class="d-flex justify-space-around py-6 px-3">
         <div class="text-center">
             <div style="margin-left: -10px;"> <v-icon color="green">mdi-circle-medium</v-icon> Cotacao</div>
             <div style="font-weight: bold;">{{ getTotal((['1', '2', '3'])) }} clientes</div>
-            <!-- <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip> -->
+            <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip>
         </div>
         <div class="d-flex">
             <v-icon color="grey" class="pt-4">mdi-arrow-right-bold-circle-outline</v-icon>
@@ -19,7 +19,7 @@
         <div class="text-center">
             <div style="margin-left: -10px;"> <v-icon color="green">mdi-circle-medium</v-icon> Proposta</div>
             <div style="font-weight: bold;">{{ getTotal((['4'])) }} clientes</div>
-            <!-- <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip> -->
+            <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip>
         </div>
         <div class="d-flex">
             <v-icon color="grey" class="pt-4">mdi-arrow-right-bold-circle-outline</v-icon>
@@ -27,7 +27,7 @@
         <div class="text-center">
             <div style="margin-left: -10px;"> <v-icon color="green">mdi-circle-medium</v-icon> Contratacao</div>
             <div style="font-weight: bold;">{{ getTotal((['5'])) }}  clientes</div>
-            <!-- <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip> -->
+            <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip>
         </div>
         <div class="d-flex">
             <v-icon color="grey" class="pt-4">mdi-arrow-right-bold-circle-outline</v-icon>
@@ -35,9 +35,9 @@
          <div class="text-center">
             <div style="margin-left: -10px;"> <v-icon color="green">mdi-circle-medium</v-icon> Implantacao</div>
             <div style="font-weight: bold;">{{ getTotal((['6'])) }}  clientes</div>
-            <!-- <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip> -->
+            <v-chip color="orange" class="py-2" size="x-small">Atencao</v-chip>
         </div>
-    </div>
+    </div> -->
 
     <!-- <v-timeline 
     align="center" 

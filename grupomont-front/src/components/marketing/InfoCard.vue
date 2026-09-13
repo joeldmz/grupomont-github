@@ -34,7 +34,7 @@
       type="number"
     />
 
-    <v-divider class="py-2"></v-divider>
+    <!-- <v-divider class="py-2"></v-divider>
 
     <v-sheet variant="tonal" class="pa-4" rounded="lg">
       <div class="d-flex justify-space-between align-center mb-1">
@@ -46,7 +46,7 @@
         <span class="font-weight-medium">53%</span>
       </div>
       <v-progress-linear model-value="53" color="primary" height="6" rounded />
-    </v-sheet>
+    </v-sheet> -->
 
   </v-card>
 </template>

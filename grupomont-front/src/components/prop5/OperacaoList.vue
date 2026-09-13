@@ -1,6 +1,6 @@
 <template>
   <v-card
-    title="Clientes"
+    title="Operacoes"
     style="height: 100%;"
   >
     <!-- <template v-slot:text>

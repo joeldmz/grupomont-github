@@ -72,30 +72,19 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { getPipelineByUnidade } from '../services/oportunidadeService.ts'
-import { getCampanhas, getTotalCampanhas } from '../services/campanhaService.ts'
-import { abrirDialog } from '../composables/UseDialog.ts'
+import { getTotalCampanhas } from '../services/campanhaService.ts'
 import { getReceitaByPeriodo, getTotalReceita } from '@/services/receitaService.ts'
 import BasicCard from '@/components/common/BasicCard.vue'
 import { getMeta } from '@/services/metaService.ts'
 import Investimento from '@/components/dashboard/Investimento.vue'
 import Receita from '@/components/dashboard/Receita.vue'
 import Periodo from '@/components/dashboard/Periodo.vue'
-import Alertas from '@/components/dashboard/Alertas.vue'
 
 const campanhasByUnidade = ref<any[]>([])
 const receitaByUnidade = ref<any[]>([])
 const pipelineByOportunidade = ref<any[]>([])
 const metaGeral = ref<any[]>([])
 const receitaByPerido = ref<any[]>([])
-
-const receita = ref<any[]>([])
-const taixaConverao = ref<any[]>([])
-const leadByUnidade = ref<any[]>([])
-const oportunidadeByUnidade = ref<any[]>([])
-const oportunidadePipeline = ref<any[]>([])
-const totalOportunidade = ref<any>({})
-const totalLead = ref<any>({})
-const resultadosGerados = ref<any>({})
 
 
 onMounted(async () => {
@@ -152,66 +141,10 @@ const getTotalOportunidadesGanha = computed(() => {
   return campanhasByUnidade.value.reduce((total: number, item: any) => total + Number(item?.oportunidades_ganhas), 0)
 })
 
-
 const getPrecentajeConversao = computed(() => {
   if(!getTotalOportunidades.value) return 0
   return getTotalOportunidadesGanha.value / getTotalOportunidades.value * 100
 })
-
-
-/*const formattedDate = computed(() => {
-  if (receita === null) return ''
-  return `${formatDate(receita.value.periodo_inicio)} ao ${formatDate(receita.value.periodo_fim)}`
-}) */
-
-/*const investimento = computed(() => {
-    if(campanhas === null) return 0
-    return campanhas.value.reduce((total, v) => total + Number(v.investimento), 0);
-}) */
-
-/*const formattedConversao = computed(() => {
-    return taixaConverao.value.map((value: any) => value.taxa_conversao);
-})
-
-function openMore() {
-   abrirDialog(
-    '',
-    'Informações detalhadas geral da receita',
-    [KpiCard, KpiCard, KpiCard],
-    receitaByUnidade.value,
-    () => {
-      console.log('Confirmado')
-    }
-  )
-
-}
-
-function openOportunidade() {
-    console.log(oportunidadeByUnidade.value)
-   abrirDialog(
-    'Oportunidades',
-    'Informações detalhadas geral de oportunidades de negocio',
-    [KpiCard, KpiCard, KpiCard],
-    oportunidadeByUnidade.value,
-    () => {
-      console.log('Confirmado')
-    }
-  )
-
-}
-
-function openLead() {
-   abrirDialog(
-    'Leads',
-    'Informações detalhadas geral de leads',
-    [KpiCard, KpiCard, KpiCard],
-    leadByUnidade.value,
-    () => {
-      console.log('Confirmado')
-    }
-  )
-
-} */
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR')

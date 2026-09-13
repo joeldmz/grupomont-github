@@ -26,7 +26,7 @@ export const getTotalClientes = async (req, res, next) => {
 
 export const getClientes = async(req, res, next) => {
     try {
-        const { unidade_negocio_id, status } = req.query;
+        const { status, start_date, end_date, etapa_id } = req.query;
         let query = `
             SELECT
                 c.id AS cliente_id,
@@ -35,37 +35,42 @@ export const getClientes = async(req, res, next) => {
                 ct.quantidade_vidas,
                 ct.valor_mensal_plano,
                 ct.status AS status_contratacao,
+                ef.id AS etapa_id,
                 ef.ordem,
                 ef.nome AS etapa,
                 co.nome AS consultor
             FROM public.cliente c
-
             INNER JOIN public.oportunidade o
                 ON o.cliente_id = c.id
-
             LEFT JOIN public.contratacao ct
                 ON ct.oportunidade_id = o.id
-
             LEFT JOIN public.plano_saude ps
                 ON ps.id = COALESCE(ct.plano_id, o.plano_id)
-
             INNER JOIN public.etapa_funil ef
                 ON ef.id = o.etapa_id
-
             LEFT JOIN public.consultor co
                 ON co.id = o.consultor_id
-
             WHERE o.unidade_negocio_id = 1
-
-            AND 
-            (
-                $1::text IS NULL
-                OR c.status = $1::text
-            )
-
-            ORDER BY ct.quantidade_vidas ASC;
+                AND (
+                    $1::text IS NULL
+                    OR c.status = $1::text
+                )
+                AND (
+                    $2::date IS NULL
+                    OR o.data_criacao >= $2::date
+                )
+                AND (
+                    $3::date IS NULL
+                    OR o.data_criacao < $3::date
+                )
+                AND (
+                    $4::bigint IS NULL
+                    OR o.etapa_id = $4::bigint
+                )
+            ORDER BY
+                COALESCE(ct.quantidade_vidas, 0) DESC;
         `
-        const dbresult = await dbquery(query, [status]);
+        const dbresult = await dbquery(query, [status, start_date, end_date, etapa_id]);
         res.json(dbresult.rows);
     } catch (error) {
         next(error);

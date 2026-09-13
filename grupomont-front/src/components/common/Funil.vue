@@ -62,7 +62,7 @@ watch(() => props.data, (data: any) => {
           },
         },
         dataLabels: {
-          enabled: false,
+          enabled: true,
         },
         xaxis: {
           categories: data.map((v: any) => v.etapa),

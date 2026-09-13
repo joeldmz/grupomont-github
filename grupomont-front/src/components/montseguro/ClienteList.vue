@@ -1,6 +1,6 @@
 <template>
   <v-card
-    title="Clientes"
+    title="Clientes Ativos"
     style="height: 100%;"
   >
     <!-- <template v-slot:text>

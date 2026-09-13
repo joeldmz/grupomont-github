@@ -72,6 +72,7 @@ const openInfo = async(item : any) => {
         '',
         [ProjetoDethale],
         [{ projeto: projeto.value }],
+        450,
         () => {
           console.log('Confirmado')
         }

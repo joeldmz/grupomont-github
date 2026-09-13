@@ -16,6 +16,7 @@
                   <th>Canais</th>
                   <th>periodo</th>
                   <th>Investimento</th>
+                  <th>Saude</th>
                   <th></th>
                 </tr>
               </thead>
@@ -37,6 +38,30 @@
                   <td>{{ value.canais ? value.canais : '-' }}</td>
                   <td>{{ formatDate(value.data_inicio )}} - {{ formatDate(value.data_fim)}}</td>
                   <td style="font-weight: bold;">R$ {{ value.investimento }}</td>
+                  <td>
+                    <div v-if="value.status !== 'Encerrada'">
+                      <v-chip
+                          v-if="value.status !== 'Encerrada' && getAtencaoCampanha(
+                            campanha.leads,
+                            campanha.oportunidades,
+                            campanha.metaLeads,
+                            campanha.metaOportunidades
+                          )"
+                          color="warning"
+                          size="small"
+                        >
+                          Atenção
+                      </v-chip>
+
+                      <v-chip
+                          v-else
+                          color="success"
+                          size="small"
+                        >
+                          Saudavel
+                      </v-chip>
+                    </div>
+                  </td>
                   <td><v-btn @click="openInfo(value.id)" icon="$vuetify" variant="tonal" size="small"></v-btn></td>
                 </tr>
               </tbody>
@@ -67,6 +92,7 @@ const openInfo = async(id: number) => {
         '',
         [InfoCard],
         [{ data: campanha.value }],
+        450,
         () => {
           console.log('Confirmado')
         }
@@ -80,5 +106,29 @@ const openInfo = async(id: number) => {
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR')
 }
+
+const getAtencaoCampanha = (
+  leads: number,
+  oportunidades: number,
+  metaLeads: number,
+  metaOportunidades: number
+) => {
+  const conversao = leads > 0
+    ? (oportunidades / leads) * 100
+    : 0
+
+  const alcanceLeads = metaLeads > 0
+    ? (leads / metaLeads) * 100
+    : 100
+
+  const alcanceOportunidades = metaOportunidades > 0
+    ? (oportunidades / metaOportunidades) * 100
+    : 100
+
+  return conversao < 15 ||
+         alcanceLeads < 50 ||
+         alcanceOportunidades < 50
+}
+
 
 </script>

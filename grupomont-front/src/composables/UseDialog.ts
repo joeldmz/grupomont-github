@@ -5,6 +5,7 @@ export const dialogTitulo = ref('')
 export const dialogMensagem = ref('')
 export const dialogComponentes = ref<Component[] | null>(null)
 export const dialogProps = ref<Record<string, unknown>[]>([])
+export const dialogWidth = ref(500)
 
 let acaoConfirmar: (() => void) | null = null
 
@@ -13,6 +14,7 @@ export function abrirDialog(
   mensagem: string,
   componentes: Component[] = [],
   props: Record<string, unknown> [] = [],
+  width: number,
   onConfirm?: () => void
 ) {
   console.log('abrirDialog chamado')
@@ -21,6 +23,7 @@ export function abrirDialog(
   dialogMensagem.value = mensagem
   dialogComponentes.value = componentes
   dialogProps.value = props
+  dialogWidth.value = width
   acaoConfirmar = onConfirm ?? null
 
   dialogAberto.value = true

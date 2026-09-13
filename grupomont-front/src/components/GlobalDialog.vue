@@ -2,7 +2,7 @@
 
   <v-dialog
     v-model="dialogAberto"
-    max-width="500"
+    :max-width="dialogWidth"
   >
 
     <v-card>
@@ -56,7 +56,8 @@ import {
   fecharDialog,
   confirmarDialog,
   dialogComponentes,
-  dialogProps
+  dialogProps,
+  dialogWidth
 } from '../composables/UseDialog'
 
 </script>

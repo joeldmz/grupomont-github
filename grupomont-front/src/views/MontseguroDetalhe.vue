@@ -44,24 +44,21 @@
     </v-row>
 
     <v-row>
-      <v-col cols="12">
-          <Jornada :data="funil"/>
+      <v-col cols="12" md="3">
+          <StatusList :items="funil" :active="7" :unidade_id="1"/>
       </v-col>
 
       <v-col cols="12" md="9">
           <ClienteList :data="clientes"/>
       </v-col>
-      
-      <v-col cols="12" md="3">
+
+       <v-col cols="12" md="9">
+          <ContratacaoChart :categories="getData('mes')" :data="getData('contratacoes')"/>
+       </v-col>
+
+       <v-col cols="12" md="3">
           <OperadoraCard :data="getOperadoraValues"/>
       </v-col>
-
-      <v-col cols="12" md="12">
-          <ContratacaoChart :categories="getData('periodo')" :data="getData('contratacoes')"/>
-      </v-col>
-       <v-col cols="12" md="3">
-         <StatusList title="status" />
-       </v-col>
     </v-row>
   </v-container>
 </template>
@@ -72,7 +69,6 @@ import BasicCard from '@/components/common/BasicCard.vue'
 import { computed, onMounted, ref } from 'vue'
 import { getClientes, getTotalClientes } from '@/services/clienteService.ts'
 import { getTotalReceitaByUnidade, getValorMensalCarteria } from '@/services/receitaService.ts'
-import Jornada from '@/components/montseguro/Jornada.vue'
 import ClienteList from '@/components/montseguro/ClienteList.vue'
 import { getFunilByUnidade } from '@/services/funilService.ts'
 import ContratacaoChart from '@/components/montseguro/ContratacaoChart.vue'
@@ -96,7 +92,7 @@ onMounted(async () => {
     totalClientes.value = await getTotalClientes( { status: 'Ativa' } )
     totalReceita.value = await getTotalReceitaByUnidade({ unidade_negocio_id: 1 })
     valorMensalCarteira.value = await getValorMensalCarteria({ unidade_negocio_id: 1 })
-    clientes.value = await getClientes({ unidade_negocio_id: 1 })
+    clientes.value = await getClientes({ unidade_negocio_id: 1, etapa_id: 7 })
     funil.value = await getFunilByUnidade({ unidade_negocio_id: 1 })
     periodosContratacao.value = await getContratacaoByperiodo({ interval: 3 }) // so para monseguro
     contratacaoByPlano.value = await getContratacaoByPlano()

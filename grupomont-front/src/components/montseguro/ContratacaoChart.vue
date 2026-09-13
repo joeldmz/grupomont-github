@@ -41,16 +41,18 @@ watch(() => props.data, (data: any) => {
     chartOptions.value = {
         chart: {
         type: 'bar',
+        height: 500,
         toolbar: {
-        show: true,
+          show: true,
         },
     },
 
     plotOptions: {
         bar: {
-        horizontal: false,
-        barHeight: '80%',
-        borderRadius: 6,
+          horizontal: false,
+          barHeight: '80%',
+          barWidth: '50%',
+          borderRadius: 6,
         },
     },
 

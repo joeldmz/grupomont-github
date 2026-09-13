@@ -59,7 +59,6 @@ import { computed, onMounted, ref } from 'vue'
 import HistoricoTable from '@/components/comercial/HistoricoTable.vue'
 import TotalCard from '@/components/comercial/TotalCard.vue'
 import { getPipelineOportunidade } from '@/services/overviewService.ts'
-import ReceitaCard from '@/components/comercial/ReceitaCard.vue'
 import BasicCard from '@/components/common/BasicCard.vue'
 import EquipePerformance from '@/components/comercial/EquipePerformance.vue'
 

@@ -31,7 +31,7 @@
               </div>
 
               <div class="text-caption text-medium-emphasis">
-                {{ percentage(data.oportunidades_ganhas) }}% del total
+                {{ percentage(data.oportunidades_ganhas) }}% do total
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@
               </div>
 
               <div class="text-caption text-medium-emphasis">
-                {{ percentage(data.oportunidades_abertas) }}% del total
+                {{ percentage(data.oportunidades_abertas) }}% do total
               </div>
 
               <!-- <v-chip
@@ -108,7 +108,7 @@
               </div>
 
               <div class="text-caption text-medium-emphasis">
-                {{ percentage(data.oportunidades_perdidas) }}% del total
+                {{ percentage(data.oportunidades_perdidas) }}% do total
               </div>
             </div>
           </div>

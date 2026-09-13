@@ -80,9 +80,7 @@ export const getTotalCampanhas = async(req, res, next) => {
 export const getCampanha = async(req, res, next) => {
     try {
         const { 
-            unidade_id,
-            canal_id, 
-            status,
+            unidade_negocio_id,
             start_date,
             end_date
         } = req.query;
@@ -101,27 +99,72 @@ export const getCampanha = async(req, res, next) => {
                 c.unidade_negocio_id,
                 u.nome AS unidade_negocio,
                 (
-                    SELECT STRING_AGG(canal.nome, ', ' ORDER BY canal.nome)
+                    SELECT STRING_AGG(
+                        canal.nome,
+                        ', ' ORDER BY canal.nome
+                    )
                     FROM public.campanha_canal cc
                     JOIN public.canal canal
                         ON canal.id = cc.canal_id
                     WHERE cc.campanha_id = c.id
-                ) AS canais
+                ) AS canais,
+                (
+                    SELECT COUNT(*)
+                    FROM public.lead l
+                    WHERE l.campanha_id = c.id
+                ) AS leads,
+
+                (
+                    SELECT COUNT(*)
+                    FROM public.oportunidade o
+                    WHERE o.campanha_id = c.id
+                ) AS oportunidades,
+                (
+                    SELECT COALESCE(
+                        JSON_AGG(
+                            JSON_BUILD_OBJECT(
+                                'id', m.id,
+                                'tipo_meta', m.tipo_meta,
+                                'valor_meta', m.valor_meta,
+                                'periodo_inicio', m.periodo_inicio,
+                                'periodo_fim', m.periodo_fim
+                            )
+                            ORDER BY m.tipo_meta
+                        ),
+                        '[]'::json
+                    )
+                    FROM public.meta m
+                    WHERE m.campanha_id = c.id
+                    AND (
+                        $1::date IS NULL
+                        OR m.periodo_fim >= $1::date
+                    )
+                    AND (
+                        $2::date IS NULL
+                        OR m.periodo_inicio < $2::date
+                    )
+                ) AS metas
             FROM public.campanha c
             LEFT JOIN public.unidade_negocio u
-                    ON u.id = c.unidade_negocio_id
-            WHERE (
-                $1::date IS NULL
-                OR c.data_inicio >= $1::date
-            )
-            AND (
-                $2::date IS NULL
-                OR c.data_inicio < $2::date
-            )
+                ON u.id = c.unidade_negocio_id
+            WHERE
+                (
+                    $1::date IS NULL
+                    OR c.data_inicio >= $1::date
+                )
+                AND (
+                    $2::date IS NULL
+                    OR c.data_inicio < $2::date
+                )
+                AND (
+                    $3::bigint IS NULL
+                    OR c.unidade_negocio_id = $3::bigint
+                )
             ORDER BY c.data_inicio DESC
+
             LIMIT 5;
         `
-        const dbresult = await dbquery(query, [start_date, end_date]);
+        const dbresult = await dbquery(query, [start_date, end_date, unidade_negocio_id]);
         res.json(dbresult.rows);
     } catch (error) {
         next(error)

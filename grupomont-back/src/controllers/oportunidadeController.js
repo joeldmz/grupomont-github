@@ -187,3 +187,63 @@ export const getOportunidadeByEquipe = async(req, res, next) => {
         next(error);
     }
 }
+
+
+
+export const getOportunidadeAndEtapa = async(req, res, next) => {
+    try {
+        const { unidade_negocio_id, etapa_id, start_date, end_date } = req.query
+        let query = `
+        SELECT
+            o.id AS oportunidade_id,
+            un.id AS unidade_negocio_id,
+            un.nome AS unidade_negocio,
+            c.id AS cliente_id,
+            c.razao_social AS cliente,
+            c.status AS status_cliente,
+            o.status AS status_oportunidade,
+            o.valor_estimado,
+            o.probabilidade,
+            o.data_criacao,
+            ef.id AS etapa_id,
+            ef.nome AS etapa,
+            ef.ordem AS etapa_ordem,
+            co.id AS consultor_id,
+            co.nome AS consultor
+        FROM public.oportunidade o
+        INNER JOIN public.unidade_negocio un
+            ON un.id = o.unidade_negocio_id
+        INNER JOIN public.cliente c
+            ON c.id = o.cliente_id
+        INNER JOIN public.etapa_funil ef
+            ON ef.id = o.etapa_id
+        LEFT JOIN public.consultor co
+            ON co.id = o.consultor_id
+        WHERE
+            (
+                $1::bigint IS NULL
+                OR o.unidade_negocio_id = $1::bigint
+            )
+            AND (
+                $2::bigint IS NULL
+                OR o.etapa_id = $2::bigint
+            )
+            AND (
+                $3::date IS NULL
+                OR o.data_criacao >= $3::date
+            )
+            AND (
+                $4::date IS NULL
+                OR o.data_criacao < $4::date
+            )
+        ORDER BY
+            ef.ordem,
+            o.data_criacao DESC;
+        `
+        const dbresponse = await dbquery(query, [unidade_negocio_id, etapa_id, start_date, end_date])
+        res.json(dbresponse.rows)
+    } catch (error) {
+        next(error);
+    }
+}
+

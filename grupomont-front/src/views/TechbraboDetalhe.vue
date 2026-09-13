@@ -49,7 +49,7 @@
         sm="6"
         md="4"
       >
-        <Funil title="Pipeline" :data="funil" :horizontal="true"/>
+        <StatusList :items="funil" :active="23" :unidade_id="3"/>
       </v-col>
 
       <v-col
@@ -65,41 +65,12 @@
 
 
 <script setup lang="ts">
-import BasicCard from '@/components/common/BasicCard.vue';
-import Funil from '@/components/common/Funil.vue';
-import ProjetoList from '@/components/techbrabo/ProjetoList.vue';
-import { getFunilByUnidade } from '@/services/funilService';
-import { getMainKpis, getProjetos } from '@/services/projetoService';
+import BasicCard from '@/components/common/BasicCard.vue'
+import StatusList from '@/components/common/StatusList.vue'
+import ProjetoList from '@/components/techbrabo/ProjetoList.vue'
+import { getFunilByUnidade } from '@/services/funilService'
+import { getMainKpis, getProjetos } from '@/services/projetoService'
 import { onMounted, ref } from 'vue';
-
-
-const etapasProjeto = [
-
-  {
-    nome: 'Prospecção',
-    quantidade: 6,
-    valor: 180000
-  },
-
-  {
-    nome: 'Proposta',
-    quantidade: 4,
-    valor: 250000
-  },
-
-  {
-    nome: 'Contrato',
-    quantidade: 2,
-    valor: 120000
-  },
-
-  {
-    nome: 'Implantação',
-    quantidade: 3,
-    valor: 210000
-  }
-
-]
 
 const mainKpis = ref<any>({})
 const funil = ref<any>([])
@@ -114,19 +85,6 @@ onMounted(async() => {
   } catch (error) {
     
   }
-});
-
-
-function formatarMoeda(valor: number) {
-  return valor.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  })
-}
-
-
-function voltar() {
-  window.history.back()
-}
+})
 
 </script>

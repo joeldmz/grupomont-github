@@ -10,8 +10,8 @@
               <thead>
                 <tr>
                   <th class="text-left" style="width: 250px;">Unidade de negocio</th>
-                  <th style="width: 250px;">Leads</th>
-                  <th style="width: 250px;">Oportunidades</th>
+                  <th style="width: 250px;">Leads/meta</th>
+                  <th style="width: 250px;">Oportunidades/meta</th>
                   <th>Conversao</th>
                   <th></th>
                 </tr>
@@ -21,23 +21,26 @@
                 <tr v-for="value in data" :key="value.id">
                   <td>{{ value.unidade_negocio }}</td>
                   <td>
-                    {{ value.leads_realizados }}/{{ parseInt(value.meta_leads) }}
+                    {{ value.leads }}/{{ getTotal(Number(value.unidade_negocio_id), metaLeads, 'valor_meta') }}
                     <v-progress-linear 
                     rounded="2"
-                    :color="getColor(value.leads_realizados, value.meta_leads)"
+                    :color="getColor(value, getTotal(Number(value.unidade_negocio_id), metaLeads, 'valor_meta'))"
                     height="5"
-                    :model-value="getPercentage(value.leads_realizados, value.meta_leads)">
+                    :model-value="getPercentage(value.leads, getTotal(Number(value.unidade_negocio_id), metaLeads, 'valor_meta'))">
                     </v-progress-linear>
                   </td>
 
                   <td>
-                    {{ value.oportunidades_realizadas }}/{{parseInt( value.meta_oportunidades) }}
+                    {{ value.oportunidades }}/{{getTotal(Number(value.unidade_negocio_id), metaOportunidades, 'valor_meta') }}
                     <v-progress-linear 
-                    :color="getColor(value.oportunidades_realizadas, value.meta_oportunidades)"
-                    :model-value="getPercentage(value.oportunidades_realizadas, value.meta_oportunidades)">
+                    :color="getColor(value.oportunidades, getTotal(Number(value.unidade_negocio_id), metaOportunidades, 'valor_meta') )"
+                    :model-value="getPercentage(value.oportunidades, getTotal(Number(value.unidade_negocio_id), metaOportunidades, 'valor_meta') )">
                     </v-progress-linear>
                   </td>
-                  <td>{{ getPercentage(value.oportunidades_realizadas, value.meta_oportunidades).toFixed(2) }}%</td>
+                  <td>
+                    {{ 
+                      getPercentage(value.oportunidades, value.leads).toFixed(0) 
+                    }}%</td>
                 </tr>
               </tbody>
             </v-table>
@@ -48,11 +51,15 @@
 <script setup lang="ts">
 
 interface Props {
-  data?: any[]
+  data?: any[],
+  metaLeads?: any[],
+  metaOportunidades?: any[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  data: () => []
+  data: () => [],
+  metaLeads: () => [],
+  metaOportunidades: () => []
 })
 
 const getPercentage = (value: number, target: number) => {
@@ -70,5 +77,12 @@ const getColor = (value: number, target: number) => {
     return 'red'
   }
 }
+
+const getTotal = (id: number, array: any[], attr: string) => {
+  if(!array) return 0
+  console.log(array.filter(v => Number(v.unidade_negocio_id) === id))
+  return array.filter(v => Number(v.unidade_negocio_id) === id).reduce((total: number, item: any) => total + Number(item[attr]), 0)
+}
+
 
 </script>

@@ -20,3 +20,8 @@ export async function getOportunidadeByEquipe(params?: any): Promise<any[]> {
   const response = await api.get<any[]>('/oportunidade/equipe')
   return response.data
 }
+
+export async function getOportunidadeAndEtapa(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/oportunidade/etapa', { params })
+  return response.data
+}

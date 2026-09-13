@@ -1,65 +1,49 @@
 <template>
   <v-card
-    class="pa-3"
+    style="height: 100%;"
   >
-    <div class="d-flex align-center justify-space-between px-1 pb-3">
-      <div class="d-flex align-center ga-2">
-        <span class="text-body-1 font-weight-medium">{{ title }}</span>
+    <v-card-title>
+      Jornada
+    </v-card-title>
 
-        <v-chip
-          class="text-caption font-weight-medium"
-          color="grey-darken-1"
-          label
-          size="small"
-          variant="tonal"
-        >
-          {{ completedCount }}/{{ items.length }}
-        </v-chip>
-      </div>
-
-      <v-btn
-        aria-label="Expandir lista"
-        icon="mdi-arrow-expand"
-        size="x-small"
-        variant="text"
-      />
-    </div>
+    <v-divider></v-divider>
 
     <v-list
-      class="pa-0 d-flex flex-column ga-1"
+      class="pa-0 d-flex flex-column ga-1 pa-3"
       lines="one"
     >
       <v-list-item
         v-for="item in items"
         :key="item.label"
         class="px-3"
-        :class="itemClass(item)"
-        :disabled="item.disabled"
+        :class="'bg-grey-lighten-4'"
         rounded="md"
-        @click="emit('select', item)"
+        @click="setItem(item)"
       >
         <template #prepend>
           <v-icon
-            :color="item.disabled ? undefined : item.completed ? 'primary' : 'grey-darken-1'"
-            :icon="item.icon || 'mdi-checkbox-blank-circle-outline'"
+            color="grey-darken-1"
+            icon="mdi-arrow-down-thin-circle-outline"
             size="20"
           />
         </template>
 
         <v-list-item-title
-          class="text-body-2"
-          :class="{ 'text-decoration-line-through': item.completed }"
+          class="text-body-2" style="font-size: 14px;"
         >
-          {{ item.label }}
+          {{ item.etapa }}
         </v-list-item-title>
 
         <template #append>
-          <v-icon
-            v-if="item.completed"
-            color="primary"
-            icon="mdi-check"
-            size="20"
-          />
+          <div v-if="item.quantidade_clientes > 0">
+            <v-icon
+                :color="Number(item.etapa_id) >= active ? 'green': 'orange'"
+                :icon="Number(item.etapa_id) >= active ? 'mdi-account-check-outline': 'mdi-account-clock-outline'"
+                size="18"
+                class="pr-3"
+            />
+            <span style="font-weight: bold; font-size: 14px;">{{ item.quantidade_clientes }} Clientes</span>
+          </div>
         </template>
       </v-list-item>
     </v-list>
@@ -67,59 +51,42 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { abrirDialog } from '@/composables/UseDialog';
+import { getOportunidadeAndEtapa } from '@/services/oportunidadeService';
+import { ref } from 'vue';
+import CommonList from './CommonList.vue';
 
-export interface StatusListItem {
-  label: string
-  completed?: boolean
-  disabled?: boolean
-  icon?: string
-}
+const oportunidade = ref<any[]>([])
 
 interface Props {
   title?: string
-  items?: StatusListItem[]
+  items?: any[],
+  active?: number,
+  unidade_id: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: 'Production Checklist',
-  items: () => [
-    {
-      label: 'Conectar repositório Git',
-      icon: 'mdi-source-branch',
-      completed: true,
-    },
-    {
-      label: 'Adicionar domínio personalizado',
-      icon: 'mdi-web',
-    },
-    {
-      label: 'Preview do deployment',
-      icon: 'mdi-cloud-search-outline',
-      completed: true,
-    },
-    {
-      label: 'Habilitar web analytics',
-      icon: 'mdi-chart-line',
-    },
-    {
-      label: 'Atualizar para Speed Insights Plus',
-      icon: 'mdi-speedometer',
-      disabled: true,
-    },
-  ],
+  title: 'Jornada',
+  items: () => [],
+  active: 7,
+  unidade_id: 0
 })
 
-const emit = defineEmits<{
-  select: [item: StatusListItem]
-}>()
-
-const items = computed(() => props.items)
-const completedCount = computed(() => items.value.filter((item) => item.completed).length)
-
-const itemClass = (item: StatusListItem) => {
-  if (item.disabled) return 'text-disabled'
-  if (item.completed) return 'bg-blue-lighten-5 text-primary'
-  return 'bg-grey-lighten-4'
+const setItem = async(item: any) => {
+    try {
+        oportunidade.value = await getOportunidadeAndEtapa({ unidade_negocio_id: props.unidade_id , etapa_id: Number(item.etapa_id) })
+        abrirDialog(
+        '',
+        '',
+        [CommonList],
+        [{data: oportunidade.value}],
+        1200,
+        () => {
+          console.log('Confirmado')
+        }
+    )
+    } catch (error) {
+        console.error(error)
+    }
 }
 </script>
