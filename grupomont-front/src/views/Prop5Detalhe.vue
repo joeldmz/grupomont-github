@@ -43,10 +43,10 @@
     </v-row>
 
     <v-row>
-      <v-col cols="12" md="4">
-          <JornadaCosultiva title="Pipeline" :data="funil"/>
+      <v-col cols="12" md="3">
+          <StatusList :items="funil" :active="16" :unidade_id="2"/>
       </v-col>
-      <v-col cols="12" md="8">
+      <v-col cols="12" md="9">
           <OperacaoList :data="operacoes"/>
       </v-col>
     </v-row>
@@ -55,17 +55,16 @@
 
 
 <script setup lang="ts">
-import BasicCard from '@/components/common/BasicCard.vue';
-import JornadaCosultiva from '@/components/prop5/JornadaCosultiva.vue';
-import OperacaoList from '@/components/prop5/OperacaoList.vue';
-import { getFunilByUnidade } from '@/services/funilService';
-import { getMainData, getOperacoes } from '@/services/operacaoService';
+import BasicCard from '@/components/common/BasicCard.vue'
+import StatusList from '@/components/common/StatusList.vue'
+import OperacaoList from '@/components/prop5/OperacaoList.vue'
+import { getFunilByUnidade } from '@/services/funilService'
+import { getMainData, getOperacoes } from '@/services/operacaoService'
 import { onMounted, ref } from 'vue';
 
 const mainData = ref<any>({})
 const funil = ref<any>([])
 const operacoes = ref<any>([])
-const operacoesByCliente = ref<any>([])
 
 onMounted(async() => {
   try {
@@ -76,11 +75,5 @@ onMounted(async() => {
     console.error('Erro ao buscar dados do cliente:', error)
   }
 })
-
-function voltar() {
-
-  window.history.back()
-
-}
 
 </script>
