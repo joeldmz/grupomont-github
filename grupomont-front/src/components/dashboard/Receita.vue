@@ -12,7 +12,12 @@
         >
 
         <template v-slot:item.oportunidades_ganhas="{ item }">
-            <span>{{ item.oportunidades_ganhas }} / (%{{ conversao(item.quantidade_oportunidades, item.oportunidades_ganhas).toFixed(0) }})</span>
+            <span>{{ item.oportunidades_ganhas }} /
+                <span 
+                 :class="`text-${getColor(conversao(item.quantidade_oportunidades, item.oportunidades_ganhas))}`" style="font-weight: bold;">
+                 ({{ conversao(item.quantidade_oportunidades, item.oportunidades_ganhas).toFixed(0) }}%)
+                </span>
+            </span>
         </template>
 
         <template v-slot:item.valor_total_oportunidades="{ item }">
@@ -62,4 +67,15 @@ const conversao = computed(() => {
         return ganha / oportunidade * 100
     }
 })
+
+
+const getColor = (value: number) => {
+  if (value >= 100) {
+    return 'green'
+  } else if (value >= 70) {
+    return 'orange'
+  } else {
+    return 'red'
+  }
+}
 </script>

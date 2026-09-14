@@ -17,31 +17,40 @@
       <v-col cols="12"
              md="3">
           <basic-card title="Receita" 
-                      :value="totalReceita"
+                      :value="totalReceita.toFixed(2)"
                       format="currency"/>
       </v-col>
       <v-col cols="12"
              md="3">
           <basic-card title="Meta" 
-                      :value="valorMeta"
-                      :info="`Gap: ${gapMeta.toFixed(2)}`"
-                      format="currency"/>
+                      :value="valorMeta.toFixed(2)"
+                      format="currency">
+                <template #info>
+                    <span :class="gapMeta > 0 ? 'text-success' : 'text-orange'">{{ `Gap: ${gapMeta > 0 ? '+' : '-'} R$${gapMeta.toFixed(2)}` }}</span>
+                </template>
+          </basic-card>
       </v-col>
 
        <v-col cols="12"
              md="3">
           <basic-card title="Pipeline" 
-                      :value="getPipeline"
-                      :info="`R$ ${getPonderado.toFixed(2)} - %${getPercentajeProbabilidade.toFixed(0)} probablidade`"
-                      format="currency"/>
+                      :value="getPipeline.toFixed(2)"
+                      format="currency">
+                <template #info>
+                    <span style="font-weight: 900;">{{ `R$ ${getPonderado.toFixed(2)} - ` }}</span>
+                    <span :class="`text-${getColor(getPercentajeProbabilidade)}`">{{ `%${getPercentajeProbabilidade.toFixed(0)} probablidade` }}</span>
+                </template>
+          </basic-card>
       </v-col>
 
       <v-col cols="12"
              md="3">
           <basic-card title="Oportunidades" 
-                      :value="getTotalOportunidades"
-                      :info="`%${getPrecentajeConversao.toFixed(0)} Conversao oportunidade → Ganha`"
-                      />
+                      :value="getTotalOportunidades">
+                <template #info>
+                    <span :class="`text-${getColor(getPrecentajeConversao)}`">{{ `%${getPrecentajeConversao.toFixed(0)} Conversao oportunidade → Ganha` }}</span>
+                </template>
+          </basic-card>
       </v-col>
       <v-col cols="12"
              md="12">
@@ -145,6 +154,16 @@ const getPrecentajeConversao = computed(() => {
   if(!getTotalOportunidades.value) return 0
   return getTotalOportunidadesGanha.value / getTotalOportunidades.value * 100
 })
+
+const getColor = (value: number) => {
+  if (value >= 100) {
+    return 'green'
+  } else if (value >= 70) {
+    return 'orange'
+  } else {
+    return 'red'
+  }
+}
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR')

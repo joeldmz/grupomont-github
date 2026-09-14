@@ -53,7 +53,6 @@ watch(() => props.data, () => {
       bar: {
         horizontal: false,
         barHeight: '10%',
-        borderRadius: 6,
       },
     },
     dataLabels: {

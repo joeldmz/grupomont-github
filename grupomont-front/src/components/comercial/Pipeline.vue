@@ -37,7 +37,7 @@
       >
         <td>{{ item.etapa }}</td>
         <td>{{ item.total }}</td>
-        <td>
+        <td v-if="item.ordem !== 5">
             {{ item.probabilidade_media }}%
             <v-progress-linear
                 :model-value="item.probabilidade_media"

@@ -123,7 +123,11 @@ export const getReceitaByPeriodo = async(req, res, next) => {
         let query = `
         WITH parametros AS (
             SELECT
-                COALESCE($2::date, date_trunc('month', CURRENT_DATE)::date) AS data_inicio,
+                COALESCE(
+                    $2::date,
+                    date_trunc('month', CURRENT_DATE)::date
+                ) AS data_inicio,
+
                 COALESCE(
                     $3::date,
                     (date_trunc('month', CURRENT_DATE) + INTERVAL '1 month')::date
@@ -135,47 +139,52 @@ export const getReceitaByPeriodo = async(req, res, next) => {
                 data_inicio - 2 * (data_fim - data_inicio) AS inicio,
                 data_inicio - (data_fim - data_inicio) AS fim
             FROM parametros
-
             UNION ALL
-
             SELECT
-                1 AS ordem,
+                1,
                 data_inicio - (data_fim - data_inicio),
                 data_inicio
             FROM parametros
-
             UNION ALL
-
             SELECT
-                0 AS ordem,
+                0,
                 data_inicio,
                 data_fim
             FROM parametros
         )
         SELECT
-            TO_CHAR(
-                p.inicio,
-                'Mon YYYY'
-            ) AS periodo,
-
+            p.ordem,
+            TO_CHAR(p.inicio, 'Mon YYYY') AS periodo,
             COALESCE(
-                SUM(r.valor),
+                SUM(r.valor) FILTER (
+                    WHERE r.unidade_negocio_id = 1
+                ),
                 0
-            ) AS receita
-
+            ) AS montseguro,
+            COALESCE(
+                SUM(r.valor) FILTER (
+                    WHERE r.unidade_negocio_id = 2
+                ),
+                0
+            ) AS prop5,
+            COALESCE(
+                SUM(r.valor) FILTER (
+                    WHERE r.unidade_negocio_id = 3
+                ),
+                0
+            ) AS techbrabo
         FROM periodos p
-
         LEFT JOIN public.receita r
             ON r.status = 'Realizada'
             AND r.data >= p.inicio
             AND r.data < p.fim
-            AND r.unidade_negocio_id IN (1, 2, 3)
-            AND ($1::bigint IS NULL OR r.unidade_negocio_id = $1::bigint)
-
+            AND (
+                $1::bigint IS NULL
+                OR r.unidade_negocio_id = $1::bigint
+            )
         GROUP BY
             p.ordem,
             p.inicio
-
         ORDER BY
             p.ordem;
         `

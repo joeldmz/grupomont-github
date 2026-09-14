@@ -15,6 +15,7 @@ export async function getTaixaConversao(): Promise<any[]> {
   return response.data
 }
 
+//mantener
 export async function getPipelineOportunidade(params?: any): Promise<any[]> {
   const response = await api.get<any[]>('/overview/pipeline', { params })
   return response.data
@@ -26,7 +27,14 @@ export async function getResultadosGerados(): Promise<any[]> {
   return response.data
 }
 
+//mantener
 export async function getMarketingPerformance(params?: any): Promise<any[]> {
   const response = await api.get<any[]>('/overview/marketing/performance', { params })
+  return response.data
+}
+
+//mantener
+export async function getPipelineOportunidadeByUnidade(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/overview/pipeline/unidade', { params })
   return response.data
 }

@@ -160,3 +160,90 @@ export const getMarketingPerformance = async(req, res, next) => {
         next(error);
     }
 }
+
+
+export const getOportunidadePipelineByUnidade = async(req, res, next) => {
+    try {
+        const {status, start_date, end_date, unidades_negocio_id } = req.query;
+        let query = `
+        SELECT
+            u.id AS unidade_negocio_id,
+            u.nome AS unidade_negocio,
+            COUNT(*) AS total_oportunidades,
+            COUNT(*) FILTER (
+                WHERE LOWER(o.status) = 'ganha'
+            ) AS oportunidades_ganhas,
+            COUNT(*) FILTER (
+                WHERE LOWER(o.status) = 'aberta'
+            ) AS oportunidades_abertas,
+            COUNT(*) FILTER (
+                WHERE LOWER(o.status) = 'perdida'
+            ) AS oportunidades_perdidas,
+            ROUND(
+                AVG(o.probabilidade) FILTER (
+                    WHERE LOWER(o.status) = 'aberta'
+                ),
+                2
+            ) AS probabilidade_media_abertas,
+            COALESCE(
+                SUM(
+                    COALESCE(o.valor_estimado, 0)
+                ) FILTER (
+                    WHERE LOWER(o.status) = 'aberta'
+                ),
+                0
+            ) AS valor_potencial,
+            COALESCE(
+                SUM(
+                    COALESCE(o.valor_estimado, 0)
+                ) FILTER (
+                    WHERE LOWER(o.status) = 'ganha'
+                ),
+                0
+            ) AS valor_realizado,
+            COALESCE(
+                SUM(
+                    COALESCE(o.valor_estimado, 0)
+                ) FILTER (
+                    WHERE LOWER(o.status) = 'perdida'
+                ),
+                0
+            ) AS valor_perdido,
+            COALESCE(
+                SUM(
+                    COALESCE(o.valor_estimado, 0)
+                    * COALESCE(o.probabilidade, 0) / 100
+                ) FILTER (
+                    WHERE LOWER(o.status) = 'aberta'
+                ),
+                0
+            ) AS valor_ponderado_abertas
+        FROM oportunidade o
+        JOIN campanha c
+            ON c.id = o.campanha_id
+        JOIN unidade_negocio u
+            ON u.id = o.unidade_negocio_id
+        WHERE
+            ($1::varchar IS NULL
+                OR LOWER(c.status) = LOWER($1::varchar))
+
+            AND ($2::date IS NULL
+                OR o.data_criacao >= $2::date)
+
+            AND ($3::date IS NULL
+                OR o.data_criacao < $3::date)
+
+            AND ($4::bigint IS NULL
+                OR o.unidade_negocio_id = $4::bigint)
+        GROUP BY
+            u.id,
+            u.nome
+        ORDER BY
+            u.id;
+        `
+        const dbresponse = await dbquery(query, [status, start_date, end_date,unidades_negocio_id]);
+        res.json(dbresponse.rows);
+    } catch (error) {
+        next(error);
+    }
+}

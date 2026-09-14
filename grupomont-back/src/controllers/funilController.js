@@ -46,6 +46,7 @@ export const getHistoricoEtapa = async(req, res, next) => {
 
 export const getFunilConsolidado = async(req, res, next) => {
     try {
+        const {status, start_date, end_date} = req.query;
         let query = `
             WITH etapas_base AS (
                 SELECT * FROM (
@@ -91,8 +92,19 @@ export const getFunilConsolidado = async(req, res, next) => {
                 INNER JOIN public.campanha c
                     ON c.id = o.campanha_id
 
-                WHERE c.status = 'Ativa' AND o.status IN ('Aberta', 'Ganha')
-
+                WHERE 
+                (
+                    $1::text[] IS NULL
+                    OR o.status = ANY($1::text[])
+                )
+                AND (
+                    $2::date IS NULL
+                    OR o.data_criacao >= $2::date
+                )
+                AND (
+                    $3::date IS NULL
+                    OR o.data_criacao <= $3::date
+                )
                 GROUP BY
                     vf.etapa_consolidada,
                     vf.ordem_consolidada
@@ -126,7 +138,7 @@ export const getFunilConsolidado = async(req, res, next) => {
 
             ORDER BY eb.ordem;
         `
-        const dbresponse = await dbquery(query);
+        const dbresponse = await dbquery(query, [status?.length ? status : null, start_date, end_date]);
         res.json(dbresponse.rows);
     } catch (error) {
         next(error);
@@ -135,6 +147,7 @@ export const getFunilConsolidado = async(req, res, next) => {
 
 export const getHistoricoFunilConsolidado = async(req, res, next) => {
     try {
+        const {status, start_date, end_date} = req.query;
         let query = `
         WITH etapas_base AS (
             SELECT * FROM (
@@ -176,11 +189,19 @@ export const getHistoricoFunilConsolidado = async(req, res, next) => {
             INNER JOIN public.campanha c
                 ON c.id = o.campanha_id
 
-            WHERE c.status = 'Ativa' AND o.status IN ('Aberta', 'Ganha')
-            AND vh.data_entrada IS NOT NULL
-            AND vh.data_entrada >= '2026-08-01'
-            AND vh.data_entrada <= '2026-09-03'
-
+            WHERE
+            (
+                    $1::text[] IS NULL
+                    OR o.status = ANY($1::text[])
+            )
+            AND (
+                    $2::date IS NULL
+                    OR o.data_criacao >= $2::date
+                )
+                AND (
+                    $3::date IS NULL
+                    OR o.data_criacao <= $3::date
+                )
             GROUP BY
                 vh.etapa_consolidada,
                 vh.ordem_consolidada
@@ -224,7 +245,7 @@ export const getHistoricoFunilConsolidado = async(req, res, next) => {
         FROM calculo
         ORDER BY ordem;
         `
-        const dbresponse = await dbquery(query);
+        const dbresponse = await dbquery(query, [status?.length ? status : null, start_date, end_date]);
         res.json(dbresponse.rows);
     } catch (error) {
         next(error);

@@ -42,8 +42,16 @@ watch(() => props.data, (data: any) => {
   data.reverse()
   series.value = [
       {
-          name: 'Periodo',
-          data: data.map((v: any) => Number(v.receita))
+          name: 'Montseguro',
+          data: data.map((v: any) => Number(v.montseguro)) || [0, 0, 0, 0, 0, 0, 0]
+      },
+      {
+        name: 'Prop5',
+        data: props.data?.map(v => Number(v.prop5)) || [0, 0, 0, 0, 0, 0, 0],
+      },
+      {
+        name: 'Techbrabo',
+        data: props.data?.map(v => Number(v.techbrabo)) || [0, 0, 0, 0, 0, 0, 0],
       }
   ]
 
@@ -57,6 +65,7 @@ watch(() => props.data, (data: any) => {
             }
           }
         },
+        colors: ['#1976D2', '#43A047', '#C8E3AF'],
         plotOptions: {
           bar: {
             borderRadius: 4,

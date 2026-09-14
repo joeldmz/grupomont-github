@@ -21,25 +21,25 @@
                 <tr v-for="value in data" :key="value.id">
                   <td>{{ value.unidade_negocio }}</td>
                   <td>
-                    {{ value.leads }}/{{ getTotal(Number(value.unidade_negocio_id), metaLeads, 'valor_meta') }}
+                    {{ value.leads }}/{{ value.meta_leads }}
                     <v-progress-linear 
                     rounded="2"
-                    :color="getColor(value, getTotal(Number(value.unidade_negocio_id), metaLeads, 'valor_meta'))"
+                    :color="getColor(value.leads, value.meta_leads)"
                     height="5"
-                    :model-value="getPercentage(value.leads, getTotal(Number(value.unidade_negocio_id), metaLeads, 'valor_meta'))">
+                    :model-value="getPercentage(value.leads, value.meta_leads)">
                     </v-progress-linear>
                   </td>
 
                   <td>
-                    {{ value.oportunidades }}/{{getTotal(Number(value.unidade_negocio_id), metaOportunidades, 'valor_meta') }}
+                    {{ value.oportunidades }}/{{ value.meta_oportunidades }}
                     <v-progress-linear 
-                    :color="getColor(value.oportunidades, getTotal(Number(value.unidade_negocio_id), metaOportunidades, 'valor_meta') )"
-                    :model-value="getPercentage(value.oportunidades, getTotal(Number(value.unidade_negocio_id), metaOportunidades, 'valor_meta') )">
+                    :color="getColor(value.oportunidades, value.meta_oportunidades)"
+                    :model-value="getPercentage(value.oportunidades, value.meta_oportunidades)">
                     </v-progress-linear>
                   </td>
                   <td>
                     {{ 
-                      getPercentage(value.oportunidades, value.leads).toFixed(0) 
+                      getConversao(value.oportunidades, value.leads).toFixed(0) 
                     }}%</td>
                 </tr>
               </tbody>
@@ -49,6 +49,8 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from 'vue';
+
 
 interface Props {
   data?: any[],
@@ -62,9 +64,21 @@ const props = withDefaults(defineProps<Props>(), {
   metaOportunidades: () => []
 })
 
+watch(() => [props.metaLeads, props.metaOportunidades], () =>{
+    props.data.forEach(v => {
+      v.meta_leads = getTotal(Number(v.unidade_negocio_id), props.metaLeads, 'valor_meta')
+      v.meta_oportunidades = getTotal(Number(v.unidade_negocio_id), props.metaOportunidades, 'valor_meta')
+    })
+})
+
 const getPercentage = (value: number, target: number) => {
   if (target === 0) return 0
   return (value / target) * 100
+}
+
+const getConversao = (value_a: number, value_b: number) => {
+  if(!value_a) return 0
+  return (value_a / value_b) * 100
 }
 
 const getColor = (value: number, target: number) => {
@@ -80,7 +94,6 @@ const getColor = (value: number, target: number) => {
 
 const getTotal = (id: number, array: any[], attr: string) => {
   if(!array) return 0
-  console.log(array.filter(v => Number(v.unidade_negocio_id) === id))
   return array.filter(v => Number(v.unidade_negocio_id) === id).reduce((total: number, item: any) => total + Number(item[attr]), 0)
 }
 

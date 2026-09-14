@@ -1,5 +1,5 @@
 <template>
-    <v-card title="Investimento e eficiência de aquisição" style="height: 100%;">
+    <v-card title="Investimento em marketing" style="height: 100%;">
         <v-divider></v-divider>
         <v-expansion-panels variant="accordion" elevation="0">
             <v-expansion-panel>
@@ -51,13 +51,13 @@
                 <v-expansion-panel-title>
                     <div class="d-flex justify-space-between align-center w-100 me-4">
                         <span>Conversão</span>
-                        <span class="font-weight-bold">{{ getConversao(getTotal('leads'), getTotal('oportunidades')).toFixed(1) }}%</span>
+                        <span style="font-weight: 900;" :class="`text-${getColor(getConversao(getTotal('leads'), getTotal('oportunidades')))}`">{{ getConversao(getTotal('leads'), getTotal('oportunidades')).toFixed(0) }}%</span>
                     </div>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                     <div v-for="value in items" class="d-flex justify-space-between">
                         <div class="pa-1">{{ value.unidade_negocio }}</div>
-                        <div>{{ getConversao(value.leads, value.oportunidades).toFixed(1) }}%</div>
+                        <div>{{ getConversao(value.leads, value.oportunidades).toFixed(0) }}%</div>
                     </div>
                 </v-expansion-panel-text>
             </v-expansion-panel>
@@ -121,6 +121,16 @@ const getConversao = (leads: number, oportunidades: number) => {
 const getRoi = (receita: number, investimento: number) => {
     if(!props.items) return 0
     return receita / investimento
+}
+
+const getColor = (value: number) => {
+  if (value >= 100) {
+    return 'green'
+  } else if (value >= 70) {
+    return 'orange'
+  } else {
+    return 'red'
+  }
 }
  
 

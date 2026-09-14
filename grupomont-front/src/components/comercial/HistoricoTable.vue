@@ -36,7 +36,7 @@
           </v-chip>
         </td>
         <td>{{ item.total_oportunidades }}</td>
-        <td>
+        <td v-if="item.total_oportunidades > 0">
           <div v-if="item.taxa_conversao">
             {{ item.taxa_conversao }}%
             <v-progress-linear
@@ -48,7 +48,7 @@
               />
           </div>
         </td>
-        <td>
+        <td v-if="item.total_oportunidades > 0">
             <v-icon icon="mdi-clock-outline px-3" :color="getHealthDias(item)" start></v-icon>
             {{ `${item.media_dias} dias` }}
         </td>
@@ -109,7 +109,6 @@ const getHealth = (item: any) => {
 const getHealthDias = (item: any) => {
     if (item === null) return 'primary'
     const dias = estimacao_dias.find((v) => v.ordem === item.ordem)?.dias || 0
-    console.log(dias)
     if (item.media_dias <= dias) {
       return 'success'
     }

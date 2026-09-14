@@ -1,157 +1,117 @@
 <template>
-  <v-card style="height: 100%;">
-    <v-card-item class="pb-0">
-        <v-card-title class="font-weight-bold">
-            Status das Oportunidades
-        </v-card-title>
+    <v-card style="height: 100%;">
+        <v-card-item class="pb-0">
+            <v-card-title class="font-weight-bold">
+                Status das Oportunidades
+            </v-card-title>
 
-        <v-card-subtitle>
-            Distribuição das oportunidades por status
-        </v-card-subtitle>
-    </v-card-item>
-
-    <v-divider></v-divider>
-
-    <v-card-text>
-      <!-- Status -->
-      <div>
-        <!-- Ganadas -->
-        <div class="d-flex justify-space-between py-6">
-          <div class="d-flex align-center">
-              <v-icon
-                class="px-6"
-                color="green"
-                icon="mdi-check-circle-outline"
-                size="22"
-              />
-
-            <div>
-              <div class="text-body-1 font-bold">
-                Ganhas
-              </div>
-
-              <div class="text-caption text-medium-emphasis">
-                {{ percentage(data.oportunidades_ganhas) }}% do total
-              </div>
-            </div>
-          </div>
-
-          <div class="text-right">
-            <span class="text-h5 font-bold" style="font-weight: bold; font-size: 16px;">
-              {{ data.oportunidades_ganhas }}
-            </span>
-            <br>
-            <span class="text-h5 font-bold" style="font-weight: bold; font-size: 16px;">
-              R$ {{ data.valor_realizado}}
-            </span>
-          </div>
-         
-        </div>
-
+            <v-card-subtitle>
+                Distribuição das oportunidades por status
+            </v-card-subtitle>
+        </v-card-item>
         <v-divider></v-divider>
+        <v-expansion-panels variant="accordion" elevation="0" v-model="expanded">
 
-        <!-- Abiertas -->
-        <div class="status-item d-flex justify-space-between py-6">
-          <div class="d-flex align-center">
-              <v-icon
-                color="blue"
-                icon="mdi-progress-clock"
-                class="px-6"
-                size="22"
-              />
-            <div>
-              <div class="text-body-2 font-weight-bold">
-                Abertas
-              </div>
+            <v-expansion-panel>
+                <v-expansion-panel-title>
+                    <div class="d-flex justify-space-between align-center w-100 me-4">
+                        <div>
+                          <v-icon
+                              color="primary"
+                              icon="mdi-progress-clock"
+                              class="pr-2"
+                              size="22"
+                          />
+                          <span>Abertas <span style="font-weight: 800;">({{ getTotal('oportunidades_abertas') }})</span></span>
+                      </div>
+                      <span class="font-weight-bold" style="font-weight: bold;">R$ {{ getTotal('valor_potencial').toFixed(2)}}</span>
+                    </div>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <div v-for="value in items" class="d-flex justify-space-between">
+                     <div class="pa-1">{{ value.unidade_negocio }} ({{ value.oportunidades_abertas }}) </div>
+                     <div>R$ {{ value.valor_potencial }}</div>
+                   </div>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
 
-              <div class="text-caption text-medium-emphasis">
-                {{ percentage(data.oportunidades_abertas) }}% do total
-              </div>
+            <v-expansion-panel>
+                <v-expansion-panel-title>
+                    <div class="d-flex justify-space-between align-center w-100 me-4">
+                      <div>
+                          <v-icon
+                              color="green"
+                              icon="mdi-check-circle-outline"
+                              class="pr-2"
+                              size="22"
+                          />
+                          <span>Ganhas <span style="font-weight: 800;">({{ getTotal('oportunidades_ganhas') }})</span></span>
+                      </div>
+                      <span class="font-weight-bold" style="font-weight: bold;">R$ {{ getTotal('valor_realizado').toFixed(2) }}</span>
+                    </div>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                   <div v-for="value in items" class="d-flex justify-space-between">
+                     <div class="pa-1">{{ value.unidade_negocio }} ({{ value.oportunidades_ganhas }}) </div>
+                     <div>R$ {{ value.valor_realizado }}</div>
+                   </div>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
 
-              <!-- <v-chip
-                    class="ma-2"
-                    color="gray"
-                    size="small"
-                    label
-                    >
-                    <v-icon icon="mdi-label" start></v-icon>
-                    {{ data.probabilidade_media_abertas }}% probabilidade geral de fechamento
-              </v-chip> -->
-            </div>
-          </div>
-          <div class="text-right">
-            <span style="font-weight: bolder; font-size: 16px;">
-              {{ data.oportunidades_abertas }}
-            </span>
-            <br>
-            <span style="font-weight: bold; font-size: 16px;">
-              R$ {{ data.valor_potencial }}
-            </span>
-          </div>
-        </div>
-
-        <v-divider></v-divider>
-
-        <!-- Perdidas -->
-        <div class="status-item d-flex justify-space-between py-6">
-          <div class="d-flex align-center">
-              <v-icon
-                color="red"
-                class="px-6"
-                icon="mdi-close-circle-outline"
-                size="22"
-              />
-
-            <div>
-              <div class="text-body-2 font-weight-medium">
-                Perdas
-              </div>
-
-              <div class="text-caption text-medium-emphasis">
-                {{ percentage(data.oportunidades_perdidas) }}% do total
-              </div>
-            </div>
-          </div>
-
-          <div class="text-right text-error">
-            <span style="font-weight: bold; font-size: 16px;">
-            {{ data.oportunidades_perdidas }}
-            </span>
-            <br>
-            <span style="font-weight: bold; font-size: 16px;">
-              - R$ {{ data.valor_perdido }}
-            </span>
-          </div>
-        </div>
-
-      </div>
-    </v-card-text>
-  </v-card>
+            <v-expansion-panel>
+                <v-expansion-panel-title>
+                    <div class="d-flex justify-space-between align-center w-100 me-4">
+                        <div>
+                          <v-icon
+                              color="red"
+                              icon="mdi-close-circle-outline"
+                              class="pr-2"
+                              size="22"
+                          />
+                          <span>Perdas <span style="font-weight: 800;">({{ getTotal('oportunidades_perdidas') }})</span></span>
+                      </div>
+                      <span class="text-red" style="font-weight: bold;">-R$ {{ getTotal('valor_perdido').toFixed(2) }}</span>
+                    </div>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <div v-for="value in items" class="d-flex justify-space-between">
+                     <div class="pa-1">{{ value.unidade_negocio }} ({{ value.oportunidades_perdidas }})</div>
+                     <div class="text-red">-R$ {{ value.valor_perdido }}</div>
+                   </div>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+        </v-expansion-panels>
+    </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue';
 
-const props = defineProps({
-  data: {
-    type: Object,
-    required: true
-  }
+const expanded = ref([0])
+
+interface Props {
+  title?: string,
+  items?: any[],
+}
+
+
+const props = withDefaults(defineProps<Props>(), {
+  items: () => []
 })
 
-const percentage = (value:any) => {
-  if (!props.data.total_oportunidades) return 0
-
-  return Math.round(
-    (value / props.data.total_oportunidades) * 100
-  )
+const getTotal = (attr: string) => {
+  if(!props.items.length) return 0
+  return Number(props.items.reduce((total: number, item: any) => total + Number(item[attr]), 0))
 }
 
-const formatCurrency = (value: any) => {
-  return new Intl.NumberFormat('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value || 0)
+const getColor = (value: number) => {
+  if (value >= 100) {
+    return 'green'
+  } else if (value >= 70) {
+    return 'orange'
+  } else {
+    return 'red'
+  }
 }
-
+ 
 </script>

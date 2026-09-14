@@ -1,12 +1,12 @@
 import api from './api'
 
-export async function getFunilConsolidado(): Promise<any[]> {
-  const response = await api.get<any[]>('/funil/consolidado')
+export async function getFunilConsolidado(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/funil/consolidado', { params })
   return response.data
 }
 
-export async function getHistoricoFunilConsolidado(): Promise<any[]> {
-  const response = await api.get<any[]>('/funil/consolidado/historico')
+export async function getHistoricoFunilConsolidado(params?: any): Promise<any[]> {
+  const response = await api.get<any[]>('/funil/consolidado/historico', { params })
   return response.data
 }
 
