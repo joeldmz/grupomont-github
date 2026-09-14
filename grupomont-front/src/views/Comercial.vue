@@ -22,18 +22,18 @@
         </v-col>
         <v-col cols="12" md="3">
             <BasicCard title="Pipeline" 
-                      :value="oportunidadePipeline.valor_potencial"
+                      :value="Number(oportunidadePipeline.valor_potencial).toFixed(2)"
                       format="currency"
                       :info="`R$ ${Number(oportunidadePipeline.valor_ponderado_abertas).toFixed(2)}  → %${oportunidadePipeline.probabilidade_media_abertas} probablidade`"
                       />
         </v-col>
         <v-col cols="12" md="3">
             <BasicCard title="Valor Realizado" 
-                      :value="Number(oportunidadePipeline.valor_realizado)"
+                      :value="Number(oportunidadePipeline.valor_realizado).toFixed(2)"
                       format="currency"/>
         </v-col>
         <v-col cols="12" md="4">
-             <TotalCard :data="oportunidadePipeline"/>
+             <TotalCard :items="oportunidadePipelineByUnidade"/>
         </v-col>
         <v-col cols="12" md="4">
             <Pipeline :data="funilConsolidado"/>
@@ -58,22 +58,29 @@ import { getFunilConsolidado, getHistoricoFunilConsolidado } from '../services/f
 import { computed, onMounted, ref } from 'vue'
 import HistoricoTable from '@/components/comercial/HistoricoTable.vue'
 import TotalCard from '@/components/comercial/TotalCard.vue'
-import { getPipelineOportunidade } from '@/services/overviewService.ts'
+import { getPipelineOportunidade, getPipelineOportunidadeByUnidade } from '@/services/overviewService.ts'
 import BasicCard from '@/components/common/BasicCard.vue'
 import EquipePerformance from '@/components/comercial/EquipePerformance.vue'
 
 const oportunidadePipeline = ref<any>({})
+const oportunidadePipelineByUnidade = ref<any>({})
 const totalOportunidade = ref<any>({})
 const funilConsolidado = ref<any[]>([])
 const funilHistoricoConsolidado = ref<any[]>([])
 const oportunidadeByEquipe = ref<any>([])
 
+const rangoData = ref({
+  start_date: '2026-08-01',
+  end_date: '2026-08-31'
+})
+
 onMounted(async () => {
   try {
     totalOportunidade.value = await getTotalOportunidade()
     oportunidadePipeline.value = await getPipelineOportunidade()
-    funilConsolidado.value = await getFunilConsolidado()
-    funilHistoricoConsolidado.value = await getHistoricoFunilConsolidado()
+    oportunidadePipelineByUnidade.value = await getPipelineOportunidadeByUnidade()
+    funilConsolidado.value = await getFunilConsolidado({ status: ['Aberta'], start_data: rangoData.value.start_date , end_date: rangoData.value.end_date })
+    funilHistoricoConsolidado.value = await getHistoricoFunilConsolidado({ status: ['Aberta'], start_data: rangoData.value.start_date , end_date: rangoData.value.end_date })
     oportunidadeByEquipe.value = await getOportunidadeByEquipe()
   } catch (error) {
     console.error('Erro ao carregar unidades:', error)
