@@ -133,7 +133,6 @@ grupomont/
 │
 ├── database/
 │   ├── schema.sql
-│   ├── views.sql
 │   └── seed.sql
 │
 └── README.md
@@ -152,3 +151,141 @@ As principais views utilizadas são:
 - `vw_funil_consolidado`
 - `vw_funil_historico`
 - `vw_oportunidade_receita`
+
+
+## Como executar o projeto
+
+### Pré-requisitos
+
+- Node.js 20+
+- npm
+- PostgreSQL / Supabase
+
+### 1. Clonar o repositório
+```bash
+git clone <joeldmz/grupomont-github>
+cd grupomont-github
+```
+
+### 2. Configurar o banco de dados
+
+Execute os arquivos na seguinte ordem:
+
+```text
+database/schema.sql
+database/seed.sql
+```
+
+### 3 - Backend
+```bash
+cd grupomont-front
+npm install
+```
+Crie o arquivo .env
+PORT=3000
+
+DB_HOST=<HOST_DO_BANCO>
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=<SENHA_DO_BANCO>
+DB_NAME=postgres
+
+
+### 4 - Frontend
+```bash
+cd grupomont-front
+npm install
+```
+Crie o arquivo .env
+
+VITE_API_URL=http://localhost:3000/api
+## Como executar o projeto
+
+### Pré-requisitos
+
+- Node.js 20+
+- npm
+- PostgreSQL / Supabase
+
+### 1. Configurar o banco de dados
+
+Execute os arquivos na seguinte ordem:
+
+```text
+database/schema.sql
+database/seed.sql
+```
+
+O arquivo `schema.sql` cria a estrutura do banco de dados e o `seed.sql` insere os dados de demonstração.
+
+### 2. Backend
+
+Entre no diretório do backend:
+
+```bash
+cd grupomont-back
+npm install
+```
+
+Crie o arquivo `.env`:
+
+```env
+DB_HOST=<HOST_DO_BANCO>
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=<SENHA_DO_BANCO>
+DB_NAME=postgres
+```
+
+Execute o backend:
+
+```bash
+npm run dev
+```
+
+O backend será executado em:
+
+```text
+http://localhost:3000
+```
+
+### 3. Frontend
+
+Em outro terminal, entre no diretório do frontend:
+
+```bash
+cd grupomont-front
+npm install
+```
+
+Crie o arquivo `.env`:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+Execute o frontend:
+
+```bash
+npm run dev
+```
+
+O frontend será executado pelo Vite, normalmente em:
+
+```text
+http://localhost:5173
+```
+
+### 4. Acessar o dashboard
+
+Com o backend e o frontend em execução, acesse:
+
+```text
+http://localhost:5173
+```
+
+O dashboard também está disponível em sua versão hospedada na Vercel:
+
+**Dashboard online:** <https://grupomont-github-eight.vercel.app/>
+
+> A versão online permite visualizar o dashboard sem a necessidade de executar o projeto localmente.
