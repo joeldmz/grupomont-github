@@ -22,28 +22,40 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Clientes" :value="mainData.quantidade_clientes" />
+        <BasicCard title="Clientes" :value="mainData.quantidade_clientes ?? 0" />
       </v-col>
       <v-col
         cols="12"
         sm="6"
         md="3"
       >
-        <BasicCard title="Volume Financeiro" :value="mainData.pipeline_patrimonial" format="currency"/>
+        <BasicCard
+          title="Volume Financeiro"
+          :value="mainData.pipeline_patrimonial ?? 0"
+          format="currency"
+        />
       </v-col>
       <v-col
         cols="12"
         sm="6"
         md="3"
       >
-        <BasicCard title="Volume Transacionado" :value="mainData.volume_transacionado" format="currency"/>
+        <BasicCard
+          title="Volume Transacionado"
+          :value="mainData.volume_transacionado ?? 0"
+          format="currency"
+        />
       </v-col>
       <v-col
         cols="12"
         sm="6"
         md="3"
       >
-        <BasicCard title="Receita" :value="mainData.receita_realizada" format="currency"/>
+        <BasicCard
+          title="Receita"
+          :value="mainData.receita_realizada ?? 0"
+          format="currency"
+        />
       </v-col>
     </v-row>
 
@@ -67,10 +79,11 @@ import DateRangeSelector, { type DateRange } from '@/components/common/DateRange
 import { getFunilByUnidade } from '@/services/funilService'
 import { getMainData, getOperacoes } from '@/services/operacaoService'
 import { onMounted, ref } from 'vue';
+import type { FunilItem, Prop5MainData } from '@/types/api'
 
-const mainData = ref<any>({})
-const funil = ref<any>([])
-const operacoes = ref<any>([])
+const mainData = ref<Prop5MainData>({})
+const funil = ref<FunilItem[]>([])
+const operacoes = ref<Record<string, unknown>[]>([])
 const dateRange = ref<DateRange>({
   start_date: '2026-01-01',
   end_date: '2026-12-31',
