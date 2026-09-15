@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <div class="d-flex justify-space-between align-start mb-6">
+    <div class="dashboard-header d-flex flex-column flex-sm-row justify-space-between align-start ga-4 mb-6">
         <div class="mb-6">
           <h1 class="text-h4">
             Dashboard

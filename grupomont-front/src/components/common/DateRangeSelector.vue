@@ -60,18 +60,26 @@ const applyRange = () => {
 
 <style scoped>
 .date-range-selector {
-  max-width: 520px;
+  width: min(100%, 420px);
+  flex-wrap: wrap;
+}
+
+.date-range-selector .v-text-field {
+  min-width: 0;
+  flex: 1 1 160px;
 }
 
 @media (max-width: 600px) {
   .date-range-selector {
-    max-width: none;
-    flex-wrap: wrap;
+    width: 100%;
   }
 
   .date-range-selector .v-text-field {
-    min-width: 140px;
-    flex: 1;
+    flex: 1 1 100%;
+  }
+
+  .date-range-selector .v-btn {
+    width: 100%;
   }
 }
 </style>

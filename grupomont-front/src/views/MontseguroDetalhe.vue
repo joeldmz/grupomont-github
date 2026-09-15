@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <!-- Header -->
-    <div class="d-flex justify-space-between align-start mb-6">
+    <div class="dashboard-header d-flex flex-column flex-sm-row justify-space-between align-start ga-4 mb-6">
       <div>
         <h1 class="text-h4">
           Montseguro
