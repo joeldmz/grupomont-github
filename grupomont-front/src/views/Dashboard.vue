@@ -93,12 +93,13 @@ import Investimento from '@/components/dashboard/Investimento.vue'
 import Receita from '@/components/dashboard/Receita.vue'
 import Periodo from '@/components/dashboard/Periodo.vue'
 import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
+import type { CampaignSummary, MetaSummary, PipelineSummary, RevenueByUnit } from '@/types/api'
 
-const campanhasByUnidade = ref<any[]>([])
-const receitaByUnidade = ref<any[]>([])
-const pipelineByOportunidade = ref<any[]>([])
-const metaGeral = ref<any[]>([])
-const receitaByPerido = ref<any[]>([])
+const campanhasByUnidade = ref<CampaignSummary[]>([])
+const receitaByUnidade = ref<RevenueByUnit[]>([])
+const pipelineByOportunidade = ref<PipelineSummary[]>([])
+const metaGeral = ref<MetaSummary[]>([])
+const receitaByPerido = ref<Record<string, unknown>[]>([])
 const dateRange = ref<DateRange>({
   start_date: '2026-01-01',
   end_date: '2026-12-31',
@@ -122,12 +123,12 @@ onMounted(() => loadDashboard())
 
 const totalReceita = computed(() => {
     if(!receitaByUnidade) return 0
-    return receitaByUnidade.value.reduce((total: number, item: any) => total + Number(item.receita_realizada), 0)
+    return receitaByUnidade.value.reduce((total, item) => total + Number(item.receita_realizada), 0)
 })
 
 const valorMeta = computed(() => {
   if(!metaGeral) return 0
-  return metaGeral.value.reduce((total: number, item: any) => total + Number(item.valor_meta), 0)
+  return metaGeral.value.reduce((total, item) => total + Number(item.valor_meta), 0)
 })
 
 const gapMeta = computed(() => {
@@ -138,12 +139,12 @@ const gapMeta = computed(() => {
 
 const getPipeline = computed(() => {
   if(!pipelineByOportunidade) return 0
-  return pipelineByOportunidade.value.reduce((total: number, item: any) => total + Number(item.pipeline), 0)
+  return pipelineByOportunidade.value.reduce((total, item) => total + Number(item.pipeline), 0)
 })
 
 const getPonderado = computed(() => {
   if(!pipelineByOportunidade) return 0
-  return pipelineByOportunidade.value.reduce((total: number, item: any) => total + Number(item?.pipeline_ponderado), 0)
+  return pipelineByOportunidade.value.reduce((total, item) => total + Number(item.pipeline_ponderado), 0)
 })
 
 const getPercentajeProbabilidade = computed(() => {
@@ -153,12 +154,12 @@ const getPercentajeProbabilidade = computed(() => {
 
 const getTotalOportunidades = computed(() => {
   if(!campanhasByUnidade) return 0
-  return campanhasByUnidade.value.reduce((total: number, item: any) => total + Number(item?.oportunidades), 0)
+  return campanhasByUnidade.value.reduce((total, item) => total + Number(item.oportunidades), 0)
 })
 
 const getTotalOportunidadesGanha = computed(() => {
   if(!campanhasByUnidade) return 0
-  return campanhasByUnidade.value.reduce((total: number, item: any) => total + Number(item?.oportunidades_ganhas), 0)
+  return campanhasByUnidade.value.reduce((total, item) => total + Number(item.oportunidades_ganhas), 0)
 })
 
 const getPrecentajeConversao = computed(() => {

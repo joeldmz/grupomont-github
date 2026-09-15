@@ -19,24 +19,24 @@
     <v-row class="py-3">
         <v-col cols="12" md="3">
             <BasicCard title="Oportunidades" 
-                      :value="oportunidadePipeline.total_oportunidades"/>
+                      :value="oportunidadePipeline.total_oportunidades ?? 0"/>
         </v-col>
         <v-col cols="12" md="3">
             <BasicCard title="Conversao" 
-                      :value="Number(getPersentage)"
+                      :value="Number(getPersentage ?? 0)"
                       :format="'percentage'"
                       :info="'Oportunidade → Ganha'"/>
         </v-col>
         <v-col cols="12" md="3">
             <BasicCard title="Pipeline" 
-                      :value="Number(oportunidadePipeline.valor_potencial).toFixed(2)"
+                      :value="Number(oportunidadePipeline.valor_potencial ?? 0).toFixed(2)"
                       format="currency"
-                      :info="`R$ ${Number(oportunidadePipeline.valor_ponderado_abertas).toFixed(2)}  → %${oportunidadePipeline.probabilidade_media_abertas} probablidade`"
+                      :info="`R$ ${Number(oportunidadePipeline.valor_ponderado_abertas ?? 0).toFixed(2)}  → %${oportunidadePipeline.probabilidade_media_abertas ?? 0} probabilidade`"
                       />
         </v-col>
         <v-col cols="12" md="3">
             <BasicCard title="Valor Realizado" 
-                      :value="Number(oportunidadePipeline.valor_realizado).toFixed(2)"
+                      :value="Number(oportunidadePipeline.valor_realizado ?? 0).toFixed(2)"
                       format="currency"/>
         </v-col>
         <v-col cols="12" md="4">
@@ -69,13 +69,14 @@ import { getPipelineOportunidade, getPipelineOportunidadeByUnidade } from '@/ser
 import BasicCard from '@/components/common/BasicCard.vue'
 import EquipePerformance from '@/components/comercial/EquipePerformance.vue'
 import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
+import type { FunilItem, OportunidadeEquipe, PipelineSummary, RevenueByUnit } from '@/types/api'
 
-const oportunidadePipeline = ref<any>({})
-const oportunidadePipelineByUnidade = ref<any>({})
-const totalOportunidade = ref<any>({})
-const funilConsolidado = ref<any[]>([])
-const funilHistoricoConsolidado = ref<any[]>([])
-const oportunidadeByEquipe = ref<any>([])
+const oportunidadePipeline = ref<PipelineSummary>({})
+const oportunidadePipelineByUnidade = ref<RevenueByUnit[]>([])
+const totalOportunidade = ref<PipelineSummary>({})
+const funilConsolidado = ref<FunilItem[]>([])
+const funilHistoricoConsolidado = ref<FunilItem[]>([])
+const oportunidadeByEquipe = ref<OportunidadeEquipe[]>([])
 
 const rangoData = ref<DateRange>({
   start_date: '2026-01-01',

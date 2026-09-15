@@ -1,16 +1,17 @@
 import api from './api'
+import type { TechbraboMainKpis } from '@/types/api'
 
-export async function getMainKpis(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/projeto/main', { params })
+export async function getMainKpis(params?: Record<string, unknown>): Promise<TechbraboMainKpis> {
+  const response = await api.get<TechbraboMainKpis>('/projeto/main', { params })
   return response.data
 }
 
-export async function getProjetos(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/projeto', { params })
+export async function getProjetos(params?: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  const response = await api.get<Record<string, unknown>[]>('/projeto', { params })
   return response.data
 }
 
-export async function getDetalheProjeto(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/projeto/detalhe', { params })
+export async function getDetalheProjeto(params?: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  const response = await api.get<Record<string, unknown>[]>('/projeto/detalhe', { params })
   return response.data
 }

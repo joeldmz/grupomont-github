@@ -53,9 +53,9 @@
         <td>{{ item.etapa }}</td>
         <td>{{ item.quantidade_clientes }}</td>
         <td>
-            {{ item.probabilidade_media }}%
+          {{ item.probabilidade_media ?? 0 }}%
             <v-progress-linear
-                :model-value="item.probabilidade_media"
+            :model-value="item.probabilidade_media ?? 0"
                 color="green"
                 height="6"
                 rounded
@@ -74,10 +74,11 @@
 import { abrirDialog } from '@/composables/UseDialog';
 import { getFunilByUnidade } from '@/services/funilService';
 import { ref } from 'vue'
+import type { FunilItem } from '@/types/api'
 
 interface Props {
   title?: string
-  data?: any[]
+  data?: FunilItem[]
 }
 
 const props = defineProps<Props>()
@@ -89,7 +90,7 @@ const unidadesNegocio = [
 ]
 
 const unidadeSelecionada = ref<number | null>(1)
-const funil = ref<any[]>(props.data ?? [])
+const funil = ref<FunilItem[]>(props.data ?? [])
 
 const onUnidadeChange = async(unidadeId: number | null) => {
   unidadeSelecionada.value = unidadeId

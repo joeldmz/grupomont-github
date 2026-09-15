@@ -76,13 +76,14 @@ import { getMeta } from '@/services/metaService';
 import { getMarketingPerformance } from '@/services/overviewService';
 import { onMounted, ref } from 'vue';
 import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue';
+import type { CampaignSummary } from '@/types/api';
 
-const campanhas = ref<any[]>([])
-const marketingPerformance = ref<any[]>([])
-const canalPerformance = ref<any[]>([])
-const campanhasByUnidade = ref<any[]>([])
-const metaLeads = ref<any[]>([])
-const metaOportunidades = ref<any[]>([])
+const campanhas = ref<CampaignSummary[]>([])
+const marketingPerformance = ref<Record<string, unknown>[]>([])
+const canalPerformance = ref<Record<string, unknown>[]>([])
+const campanhasByUnidade = ref<CampaignSummary[]>([])
+const metaLeads = ref<{ valor_meta?: number | string | null }[]>([])
+const metaOportunidades = ref<{ valor_meta?: number | string | null }[]>([])
 
 const rangoData = ref<DateRange>({
   start_date: '2026-01-01',
@@ -106,16 +107,16 @@ const loadMarketing = async (range = rangoData.value) => {
 onMounted(() => loadMarketing())
 
 
-const getTotal = (array: any[], attr: string) => {
-  if(!array) return 0
-  return array.reduce((total: number, item: any) => total + Number(item[attr]), 0)
+const getTotal = <T extends object, K extends keyof T>(
+  array: readonly T[] | undefined,
+  attr: K,
+) => {
+  return (array ?? []).reduce((total, item) => total + Number(item[attr] ?? 0), 0)
 }
 
 const getConversao = () => {
   return (getTotal(campanhasByUnidade.value,'oportunidades') / getTotal(campanhasByUnidade.value, 'leads') * 100).toFixed(0)
 }
-
-
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR')

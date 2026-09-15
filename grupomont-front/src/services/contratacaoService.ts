@@ -1,16 +1,17 @@
 import api from './api'
+import type { ContractPeriod } from '@/types/api'
 
-export async function getContratacaoByperiodo(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/contratacao/periodo', { params })
+export async function getContratacaoByperiodo(params?: Record<string, unknown>): Promise<ContractPeriod[]> {
+  const response = await api.get<ContractPeriod[]>('/contratacao/periodo', { params })
   return response.data
 }
 
-export async function getContratacaoByPlano(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/contratacao/plano', { params })
+export async function getContratacaoByPlano(params?: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  const response = await api.get<Record<string, unknown>[]>('/contratacao/plano', { params })
   return response.data
 }
 
-export async function getContratacaoByOperadora(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/contratacao/operadora', { params })
+export async function getContratacaoByOperadora(params?: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  const response = await api.get<Record<string, unknown>[]>('/contratacao/operadora', { params })
   return response.data
 }

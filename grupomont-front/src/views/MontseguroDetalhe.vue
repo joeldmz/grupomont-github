@@ -23,28 +23,28 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Clientes Ativos" :value="totalClientes?.clientes_ativos" />
+        <BasicCard title="Clientes Ativos" :value="totalClientes?.clientes_ativos ?? 0" />
       </v-col>
       <v-col
         cols="12"
         sm="6"
         md="3"
       >
-        <BasicCard title="Vidas Ativas" :value="totalClientes?.vidas_ativas" />
+        <BasicCard title="Vidas Ativas" :value="totalClientes?.vidas_ativas ?? 0" />
       </v-col>
       <v-col
         cols="12"
         sm="6"
         md="3"
       >
-        <BasicCard title="Valor Mensal da Carteira" :value="valorMensalCarteira?.valor_mensal_carteira" format="currency" />
+        <BasicCard title="Valor Mensal da Carteira" :value="valorMensalCarteira?.valor_mensal_carteira ?? 0" format="currency" />
       </v-col>
       <v-col
         cols="12"
         sm="6"
         md="3"
       >
-        <BasicCard title="Receita" :value="totalReceita?.receita_realizada" format="currency"/>
+        <BasicCard title="Receita" :value="totalReceita?.receita_realizada ?? 0" format="currency"/>
       </v-col>
     </v-row>
 
@@ -81,16 +81,17 @@ import { getContratacaoByOperadora, getContratacaoByperiodo, getContratacaoByPla
 import OperadoraCard from '@/components/montseguro/OperadoraCard.vue'
 import StatusList from '@/components/common/StatusList.vue'
 import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
+import type { ContractPeriod, FunilItem, MontseguroClients, MontseguroPortfolio, RevenueByUnit } from '@/types/api'
 
 
-const totalClientes = ref<any>({})
-const totalReceita = ref<any>({})
-const valorMensalCarteira = ref<any>({})
-const clientes = ref<any>([])
-const funil = ref<any>([])
-const periodosContratacao = ref<any>([])
-const contratacaoByPlano = ref<any>([])
-const contratacaoByOperadora = ref<any>([])
+const totalClientes = ref<MontseguroClients>({})
+const totalReceita = ref<RevenueByUnit>({})
+const valorMensalCarteira = ref<MontseguroPortfolio>({})
+const clientes = ref<Record<string, unknown>[]>([])
+const funil = ref<FunilItem[]>([])
+const periodosContratacao = ref<ContractPeriod[]>([])
+const contratacaoByPlano = ref<Record<string, unknown>[]>([])
+const contratacaoByOperadora = ref<Record<string, unknown>[]>([])
 const dateRange = ref<DateRange>({
   start_date: '2026-01-01',
   end_date: '2026-12-31',
@@ -116,7 +117,7 @@ onMounted(() => loadMontseguro())
 
 
 const getData = computed(() => {
-  return (attr: string) => periodosContratacao.value.map((v: any) => v[attr])
+  return (attr: keyof ContractPeriod) => periodosContratacao.value.map((item) => item[attr])
 })
 
 const getOperadoraValues = computed(() => {

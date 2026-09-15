@@ -24,11 +24,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { DateRange } from '@/types/api'
 
-export interface DateRange {
-  start_date: string
-  end_date: string
-}
+export type { DateRange }
 
 const getDefaultStartDate = () => {
   return `${new Date().getFullYear()}-01-01`

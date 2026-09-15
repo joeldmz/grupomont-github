@@ -51,7 +51,7 @@
         <td v-if="item.ordem !== 5">
             {{ item.probabilidade_media }}%
             <v-progress-linear
-                :model-value="item.probabilidade_media"
+                :model-value="item.probabilidade_media ?? 0"
                 color="green"
                 height="6"
                 rounded
@@ -171,11 +171,12 @@ import { abrirDialog } from '@/composables/UseDialog';
 import { getFunilByUnidade } from '@/services/funilService';
 import { onMounted, ref } from 'vue';
 import UnidadePipeline from './UnidadePipeline.vue';
-const funil = ref<any>([])
+import type { FunilItem, HistoricoFunilItem } from '@/types/api'
+const funil = ref<FunilItem[]>([])
 
 interface Props {
   title?: string
-  data?: any[]
+  data?: FunilItem[]
 }
 
 defineProps<Props>()
@@ -190,31 +191,37 @@ const estimacao_dias = [
     { etapa: 'Fechamento' , dias: 10 }
 ]
 
-const getHealthColor = (item: any) => {
-  if (item.taxa_conversao === null) return 'primary'
+const getHealthColor = (item: HistoricoFunilItem) => {
+  if (item.taxa_conversao == null) return 'primary'
 
   const dias = estimacao_dias.find((v) => v.etapa === item.etapa)?.dias || 0
-  if (item.taxa_conversao >= 70 && item.media_dias <= dias) {
+  const taxaConversao = Number(item.taxa_conversao)
+  const mediaDias = Number(item.media_dias ?? 0)
+
+  if (taxaConversao >= 70 && mediaDias <= dias) {
     return 'success'
   }
 
-  if (item.taxa_conversao < 40 && item.media_dias > dias) {
+  if (taxaConversao < 40 && mediaDias > dias) {
     return 'error'
   }
 
   return 'warning'
 }
 
-const getHealthLabel = (item: any) => {
-  if (item.taxa_conversao === null) return 'Inicial'
+const getHealthLabel = (item: HistoricoFunilItem) => {
+  if (item.taxa_conversao == null) return 'Inicial'
 
   const dias = estimacao_dias.find((v) => v.etapa === item.etapa)?.dias || 0
-  if (item.taxa_conversao >= 70 && item.media_dias <= dias) {
+  const taxaConversao = Number(item.taxa_conversao)
+  const mediaDias = Number(item.media_dias ?? 0)
+
+  if (taxaConversao >= 70 && mediaDias <= dias) {
     return 'Saudável'
   }
 
-  if (item.taxa_conversao < 40 && item.media_dias > dias) {
-    return  item.taxa_conversao < 40 ? 'Crítico - taixa de convercao baixa' : 'Crítico - demora em etapa'
+  if (taxaConversao < 40 && mediaDias > dias) {
+    return 'Crítico - taxa de conversão baixa'
   }
 
   return 'Atenção'

@@ -1,4 +1,5 @@
 import api from './api'
+import type { PipelineSummary } from '@/types/api'
 
 export async function getReceitaOverview(): Promise<any[]> {
   const response = await api.get<any[]>('/overview/receita')
@@ -16,8 +17,8 @@ export async function getTaixaConversao(): Promise<any[]> {
 }
 
 //mantener
-export async function getPipelineOportunidade(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/overview/pipeline', { params })
+export async function getPipelineOportunidade(params?: Record<string, unknown>): Promise<PipelineSummary> {
+  const response = await api.get<PipelineSummary>('/overview/pipeline', { params })
   return response.data
 }
 
@@ -28,13 +29,13 @@ export async function getResultadosGerados(): Promise<any[]> {
 }
 
 //mantener
-export async function getMarketingPerformance(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/overview/marketing/performance', { params })
+export async function getMarketingPerformance(params?: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  const response = await api.get<Record<string, unknown>[]>('/overview/marketing/performance', { params })
   return response.data
 }
 
 //mantener
-export async function getPipelineOportunidadeByUnidade(params?: any): Promise<any[]> {
-  const response = await api.get<any[]>('/overview/pipeline/unidade', { params })
+export async function getPipelineOportunidadeByUnidade(params?: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  const response = await api.get<Record<string, unknown>[]>('/overview/pipeline/unidade', { params })
   return response.data
 }

@@ -36,7 +36,7 @@
         <td>{{ item.etapa }}</td>
         <td>
           <v-chip
-            v-if="item.total_oportunidades > 0"
+            v-if="hasOportunidades(item)"
             class="ma-2"
             :color="getSaude(item)"
             size="small"
@@ -45,12 +45,12 @@
             {{ getSaude(item) === 'success' ?  `Saudavel` : `Atenção` }} 
           </v-chip>
         </td>
-        <td>{{ item.total_oportunidades }}</td>
-        <td v-if="item.total_oportunidades > 0">
+        <td>{{ item.total_oportunidades ?? 0 }}</td>
+        <td v-if="hasOportunidades(item)">
           <div v-if="item.taxa_conversao">
             {{ item.taxa_conversao }}%
             <v-progress-linear
-                v-if="item.taixa_conversao !== null"
+                v-if="item.taxa_conversao !== null && item.taxa_conversao !== undefined"
                 :model-value="item.taxa_conversao"
                 :color="getHealth(item.taxa_conversao)"
                 height="6"
@@ -58,7 +58,7 @@
               />
           </div>
         </td>
-        <td v-if="item.total_oportunidades > 0">
+        <td v-if="hasOportunidades(item)">
             <v-icon icon="mdi-clock-outline px-3" :color="getHealthDias(item)" start></v-icon>
             {{ `${item.media_dias} dias` }}
         </td>
@@ -73,18 +73,22 @@ import { abrirDialog } from '@/composables/UseDialog';
 import { getHistoricoFunilByUnidade } from '@/services/funilService';
 import { ref } from 'vue';
 import UnidadeHistorico from './UnidadeHistorico.vue';
+import type { HistoricoFunilItem } from '@/types/api';
 
-const funil = ref<any>([])
+const funil = ref<HistoricoFunilItem[]>([])
 
 interface Props {
   title?: string,
-  data?: any[]
+  data?: HistoricoFunilItem[]
 }
 
 const props = defineProps<Props>()
 
-  const headers: any = [
-    { title: 'Ordem', key: 'ordem', align: 'start' },
+const hasOportunidades = (item: HistoricoFunilItem): boolean =>
+  Number(item.total_oportunidades ?? 0) > 0
+
+  const headers = [
+    { title: 'Ordem', key: 'ordem', align: 'start' as const },
     { title: 'Etapa', key: 'etapa' },
     { title: 'Saude', key: 'saude' },
     { title: 'Oportunidades', key: 'total_oportunidades' },
@@ -100,35 +104,37 @@ const props = defineProps<Props>()
     { ordem: 5 , dias: 10 }
 ]
 
-const getSaude = (item: any) => {
+const getSaude = (item: HistoricoFunilItem) => {
   if(getHealth(item.taxa_conversao) === 'error' || getHealthDias(item) === 'error') {
      return 'error'
   }
   return 'success'
 }
 
-const getHealth = (item: any) => {
-    if (item === null) return 'primary'
+const getHealth = (item: number | string | null | undefined) => {
+  if (item === null || item === undefined) return 'primary'
+  const value = Number(item)
 
-    if (item >= 70) {
+  if (value >= 70) {
       return 'success'
     }
 
-    if (item < 40) {
+    if (value < 40) {
       return 'error'
     }
 
     return 'warning'
 }
 
-const getHealthDias = (item: any) => {
-    if (item === null) return 'primary'
+const getHealthDias = (item: HistoricoFunilItem) => {
+  if (item.media_dias === null || item.media_dias === undefined) return 'primary'
     const dias = estimacao_dias.find((v) => v.ordem === item.ordem)?.dias || 0
-    if (item.media_dias <= dias) {
+  const mediaDias = Number(item.media_dias)
+  if (mediaDias <= dias) {
       return 'success'
     }
 
-    if (item.media_dias > dias) {
+    if (mediaDias > dias) {
       return 'error'
     }
 

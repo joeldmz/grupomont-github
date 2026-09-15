@@ -22,7 +22,7 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Clientes" :value="mainKpis.quantidade_clientes"/>
+        <BasicCard title="Clientes" :value="mainKpis.quantidade_clientes ?? 0" />
       </v-col>
 
       <v-col
@@ -30,7 +30,7 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Projetos" :value="mainKpis.quantidade_projetos"/>
+        <BasicCard title="Projetos" :value="mainKpis.quantidade_projetos ?? 0" />
       </v-col>
 
       <v-col
@@ -38,7 +38,7 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Receita Pontual" :value="mainKpis.receita_pontual" format="currency"/>
+        <BasicCard title="Receita Pontual" :value="mainKpis.receita_pontual ?? 0" format="currency" />
       </v-col>
 
       <v-col
@@ -46,7 +46,7 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Receita Recorrente" :value="mainKpis.receita_recorrente" format="currency"/>
+        <BasicCard title="Receita Recorrente" :value="mainKpis.receita_recorrente ?? 0" format="currency" />
       </v-col>
 
       <v-col
@@ -77,10 +77,11 @@ import DateRangeSelector, { type DateRange } from '@/components/common/DateRange
 import { getFunilByUnidade } from '@/services/funilService'
 import { getMainKpis, getProjetos } from '@/services/projetoService'
 import { onMounted, ref } from 'vue';
+import type { FunilItem, TechbraboMainKpis } from '@/types/api'
 
-const mainKpis = ref<any>({})
-const funil = ref<any>([])
-const projetos = ref<any>([])
+const mainKpis = ref<TechbraboMainKpis>({})
+const funil = ref<FunilItem[]>([])
+const projetos = ref<Record<string, unknown>[]>([])
 const dateRange = ref<DateRange>({
   start_date: '2026-01-01',
   end_date: '2026-12-31',
