@@ -41,7 +41,7 @@ const headers: any[] = [
 { key: 'cliente', title: 'Cliente' },
 { key: 'etapa', title: 'Etapa' },
 { key: 'valor_estimado', title: 'Valor Estimado' },
-{ key: 'probabilidade', title: 'Probablidade(%)' },
+{ key: 'probabilidade', title: 'Probabilidade (%)' },
 { key: 'status_cliente', title: 'Status' },
 { key: 'consultor', title: 'Consultor' },
 ]

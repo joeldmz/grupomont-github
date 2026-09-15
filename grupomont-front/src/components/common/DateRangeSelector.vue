@@ -10,7 +10,7 @@
     />
     <v-text-field
       v-model="endDate"
-      label="Hasta"
+      label="Até"
       type="date"
       density="compact"
       variant="outlined"

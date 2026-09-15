@@ -1,7 +1,7 @@
 <template>
     <v-card style="height: 100%;">
           <v-card-title>
-            Performance por unidade de negocio 
+            Performance por unidade de negócio 
           </v-card-title>
           <v-divider></v-divider>
 
@@ -9,10 +9,10 @@
             <v-table>
               <thead>
                 <tr>
-                  <th class="text-left" style="width: 250px;">Unidade de negocio</th>
+                  <th class="text-left" style="width: 250px;">Unidade de negócio</th>
                   <th style="width: 250px;">Leads/meta</th>
                   <th style="width: 250px;">Oportunidades/meta</th>
-                  <th>Conversao</th>
+                  <th>Conversão</th>
                   <th></th>
                 </tr>
               </thead>

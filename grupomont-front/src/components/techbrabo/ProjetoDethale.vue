@@ -100,13 +100,13 @@ const getColorStatus = computed(() => {
 })
 
 const getTextStatus = computed(() => {
-    if(!props.projeto.data_inicio && !props.projeto.data_previsao_entrega) return 'Sem Previsao'
+    if(!props.projeto.data_inicio && !props.projeto.data_previsao_entrega) return 'Sem previsão'
 
     if(props.projeto.status_projeto === 'Concluido' && !props.projeto.data_entrega) return 'Sem data de entrega'
 
-    if(props.projeto.status_projeto === 'Concluido' && (new Date(props.projeto.data_entrega) <= new Date(props.projeto.data_previsao_entrega))) return 'Entrege no prazo'
+    if(props.projeto.status_projeto === 'Concluido' && (new Date(props.projeto.data_entrega) <= new Date(props.projeto.data_previsao_entrega))) return 'Entregue no prazo'
 
-    if(props.projeto.status_projeto === 'Concluido' && (new Date(props.projeto.data_entrega) > new Date(props.projeto.data_previsao_entrega))) return 'Entrege no prazo'
+    if(props.projeto.status_projeto === 'Concluido' && (new Date(props.projeto.data_entrega) > new Date(props.projeto.data_previsao_entrega))) return 'Entregue com atraso'
 
     if(new Date() <= new Date(props.projeto.data_previsao_entrega)) return 'No prazo'
 

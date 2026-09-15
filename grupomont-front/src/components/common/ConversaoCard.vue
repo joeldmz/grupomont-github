@@ -7,7 +7,7 @@
           <v-row align="center" class="mb-3">
             <v-col>
               <span class="text-caption">
-                {{ 'Conversao' }}
+                {{ 'Conversão' }}
               </span>
             </v-col>
           </v-row>

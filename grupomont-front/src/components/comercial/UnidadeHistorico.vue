@@ -21,7 +21,7 @@
       </v-card-title>
 
       <v-card-subtitle>
-        Estagio atual de oportunidades por etapa
+        Estágio atual de oportunidades por etapa
       </v-card-subtitle>
     </v-card-item>
 
@@ -47,7 +47,7 @@
             size="small"
             label
           >
-            {{ getSaude(item) === 'success' ?  `Saudavel` : `Requer atencao` }} 
+            {{ getSaude(item) === 'success' ?  `Saudável` : `Requer atenção` }}
           </v-chip>
         </td>
         <td>{{ item.oportunidades }}</td>
@@ -97,9 +97,9 @@ const unidadesNegocio = [
 
 const headers: any = [
     { title: 'Etapa', key: 'etapa' },
-    { title: 'Saude', key: 'saude' },
+    { title: 'Saúde', key: 'saude' },
     { title: 'Oportunidades', key: 'oportunidades' },
-    { title: 'Taixa de conversao', key: 'taixa_conversao' },
+    { title: 'Taxa de conversão', key: 'taixa_conversao' },
     { title: 'Tempo medio', key: 'media_dias' },
   ]
 

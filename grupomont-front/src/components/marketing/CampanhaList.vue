@@ -11,12 +11,12 @@
                 <tr>
                   <th>#ID</th>
                   <th>Campanha</th>
-                  <th>Unidade de negocio</th>
+                  <th>Unidade de negócio</th>
                   <th>Status</th>
                   <th>Canais</th>
-                  <th>periodo</th>
+                  <th>Período</th>
                   <th>Investimento</th>
-                  <th>Saude</th>
+                  <th>Saúde</th>
                   <th></th>
                 </tr>
               </thead>
@@ -58,7 +58,7 @@
                           color="success"
                           size="small"
                         >
-                          Saudavel
+                          Saudável
                       </v-chip>
                     </div>
                   </td>

@@ -7,7 +7,7 @@
         </h1>
 
         <p class="text-body-2 text-medium-emphasis">
-          Desempenho e volumen comrecial
+          Desempenho e volume comercial
         </p>
       </div>
       <DateRangeSelector
@@ -22,7 +22,7 @@
                       :value="oportunidadePipeline.total_oportunidades ?? 0"/>
         </v-col>
         <v-col cols="12" md="3">
-            <BasicCard title="Conversao" 
+            <BasicCard title="Conversão"
                       :value="Number(getPersentage ?? 0)"
                       :format="'percentage'"
                       :info="'Oportunidade → Ganha'"/>

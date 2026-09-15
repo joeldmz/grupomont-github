@@ -22,7 +22,7 @@
                     :color="Number(progressoTemporal(item)) >= 80 ? 'orange' : 'success'" 
                     size="small"
                     >
-                <v-icon class="pr-1">mdi-information-outline</v-icon>  {{ Number(progressoTemporal(item)) >= 80 ? 'Atencao' : 'Saudavel' }}
+                <v-icon class="pr-1">mdi-information-outline</v-icon>  {{ Number(progressoTemporal(item)) >= 80 ? 'Atenção' : 'Saudável' }}
             </v-chip> 
         </template>
 
@@ -60,7 +60,7 @@ const headers: any[] = [
 { key: 'cliente', title: 'Cliente' },
 { key: 'equipe', title: 'Squad' },
 { key: 'status', title: 'Status' },
-{ key: 'saude', title: 'Saude' },
+{ key: 'saude', title: 'Saúde' },
 { key: 'acoes', title: '' },
 ]
 

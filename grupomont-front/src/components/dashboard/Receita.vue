@@ -53,12 +53,12 @@ const headers: any[] = [
     sortable: false,
     title: 'Id',
 },
-{ key: 'empresa', title: 'Unidad de Negocio' },
+{ key: 'empresa', title: 'Unidade de negócio' },
 { key: 'receita_realizada', title: 'Receita' },
 { key: 'valor_total_oportunidades', title: 'Pipeline (Valor potencial)' },
 { key: 'quantidade_oportunidades', title: 'Oportunidades' },
-{ key: 'oportunidades_ganhas', title: 'Ganhas / (%)Conversao' },
-{ key: 'ticket_medio', title: 'Ticket Medio' },
+{ key: 'oportunidades_ganhas', title: 'Ganhas / (%) Conversão' },
+{ key: 'ticket_medio', title: 'Ticket médio' },
 { key: 'acoes', title: '' },
 ]
 

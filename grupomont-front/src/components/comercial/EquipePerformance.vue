@@ -67,7 +67,7 @@ watch(() => props.data, () => {
     },
     xaxis: {
         categories: props.data?.map(item =>
-            `${item.equipe} - conversao (${Number(item.conversao).toFixed(1)}%)`
+            `${item.equipe} - conversão (${Number(item.conversao).toFixed(1)}%)`
         ) || [],
     }
   }

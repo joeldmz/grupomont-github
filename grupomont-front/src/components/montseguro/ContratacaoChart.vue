@@ -1,7 +1,7 @@
 <template>
   <v-card style="height: 100%;">
     <v-card-title>
-      Contratacao por periodo
+      Contratação por período
     </v-card-title>
 
     <v-card-text>
@@ -33,7 +33,7 @@ const chartOptions = ref<any>({})
 watch(() => props.data, (data: any) => {
     series.value = [
         {
-            name: 'Percentaje Conversao',
+            name: 'Percentual de conversão',
             data: data
         }
     ]
@@ -71,7 +71,7 @@ watch(() => props.data, (data: any) => {
 
 const series = ref([
   {
-    name: 'Percentaje Conversao',
+    name: 'Percentual de conversão',
     data: props.data
   }
 ])

@@ -37,7 +37,7 @@
     <v-divider class="py-2"></v-divider>
 
     <v-chip class="pl-3" :color="getColor(conversao(data[0].leads , data[0].oportunidades))">
-      {{ `${conversao(data[0].leads , data[0].oportunidades)}% Conversao Lead → Oportunidade` }}
+      {{ `${conversao(data[0].leads , data[0].oportunidades)}% Conversão Lead → Oportunidade` }}
     </v-chip>
 
     <!--<v-sheet variant="tonal" class="pa-4" rounded="lg">

@@ -42,7 +42,7 @@
             size="small"
             label
           >
-            {{ getSaude(item) === 'success' ?  `Saudavel` : `Atenção` }} 
+            {{ getSaude(item) === 'success' ?  `Saudável` : `Atenção` }} 
           </v-chip>
         </td>
         <td>{{ item.total_oportunidades ?? 0 }}</td>
@@ -90,10 +90,10 @@ const hasOportunidades = (item: HistoricoFunilItem): boolean =>
   const headers = [
     { title: 'Ordem', key: 'ordem', align: 'start' as const },
     { title: 'Etapa', key: 'etapa' },
-    { title: 'Saude', key: 'saude' },
+    { title: 'Saúde', key: 'saude' },
     { title: 'Oportunidades', key: 'total_oportunidades' },
-    { title: 'Taixa de conversao', key: 'taixa_conversao' },
-    { title: 'Tempo medio', key: 'media_dias' },
+    { title: 'Taxa de conversão', key: 'taixa_conversao' },
+    { title: 'Tempo médio', key: 'media_dias' },
   ]
 
   const estimacao_dias = [

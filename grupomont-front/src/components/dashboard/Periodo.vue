@@ -33,7 +33,7 @@ const props = defineProps<Props>()
 const chartOptions = ref<any>({})
 const series = ref([
   {
-    name: 'Percentaje Conversao',
+    name: 'Percentual de conversão',
     data: props.data
   }
 ])

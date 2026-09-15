@@ -21,7 +21,7 @@
       </v-card-title>
 
       <v-card-subtitle>
-        Estagio atual de oportunidades por etapa
+        Estágio atual de oportunidades por etapa
       </v-card-subtitle>
     </v-card-item>
 
@@ -38,7 +38,7 @@
           Oportunidades
         </th>
         <th class="text-left">
-          (%) Probabildade de Fechamento
+          (%) Probabilidade de fechamento
         </th>
         <!-- <th class="text-left">
           Receita Estimada

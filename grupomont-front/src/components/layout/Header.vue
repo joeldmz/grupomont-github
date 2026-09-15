@@ -2,7 +2,7 @@
   <v-app-bar elevation="1">
     <v-app-bar-nav-icon
       class="d-md-none"
-      aria-label="Abrir menú de navegación"
+      aria-label="Abrir menu de navegação"
       @click="$emit('toggleNavigation')"
     />
 
