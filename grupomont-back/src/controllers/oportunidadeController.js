@@ -192,7 +192,7 @@ export const getOportunidadeByEquipe = async(req, res, next) => {
 
 export const getOportunidadeAndEtapa = async(req, res, next) => {
     try {
-        const { unidade_negocio_id, etapa_id, start_date, end_date } = req.query
+        const { unidade_negocio_id, etapa_id, start_date, end_date, status } = req.query
         let query = `
         SELECT
             o.id AS oportunidade_id,
@@ -236,11 +236,18 @@ export const getOportunidadeAndEtapa = async(req, res, next) => {
                 $4::date IS NULL
                 OR o.data_criacao < $4::date
             )
+                AND (
+                $5::text[] IS NULL
+                OR LOWER(o.status) = ANY(
+                    SELECT LOWER(status)
+                    FROM unnest($5::text[]) AS status
+                )
+            )
         ORDER BY
             ef.ordem,
             o.data_criacao DESC;
         `
-        const dbresponse = await dbquery(query, [unidade_negocio_id, etapa_id, start_date, end_date])
+        const dbresponse = await dbquery(query, [unidade_negocio_id, etapa_id, start_date, end_date, status?.length ? status : null])
         res.json(dbresponse.rows)
     } catch (error) {
         next(error);

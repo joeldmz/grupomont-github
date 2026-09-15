@@ -80,7 +80,7 @@ const projetos = ref<any>([])
 onMounted(async() => {
   try {
       mainKpis.value = await getMainKpis()
-      funil.value = await getFunilByUnidade({ unidade_negocio_id: 3 })
+      funil.value = await getFunilByUnidade({ unidade_negocio_id: 3, status: ['Aberta', 'Ganha'] })
       projetos.value = await getProjetos()
   } catch (error) {
     

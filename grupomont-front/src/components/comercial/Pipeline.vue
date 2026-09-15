@@ -1,8 +1,19 @@
 <template>
   <v-card style="height: 100%;">
     <v-card-item class="pb-0">
-      <v-card-title class="font-weight-bold">
-        Pipeline
+      <v-card-title class="d-flex justify-space-between font-weight-bold">
+        
+        <span>
+          Pipeline
+        </span>
+        <v-btn
+          class="open-funil-btn"
+          icon="mdi-arrow-expand"
+          variant="flat"
+          size="small"
+          aria-label="Abrir funil"
+          @click="openFunil"
+        />
       </v-card-title>
 
       <v-card-subtitle>
@@ -156,7 +167,11 @@
 </template>
 
 <script setup lang="ts">
-
+import { abrirDialog } from '@/composables/UseDialog';
+import { getFunilByUnidade } from '@/services/funilService';
+import { onMounted, ref } from 'vue';
+import UnidadePipeline from './UnidadePipeline.vue';
+const funil = ref<any>([])
 
 interface Props {
   title?: string
@@ -164,6 +179,8 @@ interface Props {
 }
 
 defineProps<Props>()
+
+
 
 const estimacao_dias = [
     { etapa: 'Qualificacao' , dias: 10 },
@@ -202,6 +219,25 @@ const getHealthLabel = (item: any) => {
 
   return 'Atenção'
 }
+
+const openFunil = async() => {
+  try {
+      funil.value = await getFunilByUnidade({ unidade_negocio_id: 1, status: ['Aberta', 'Ganha'] })
+      abrirDialog(
+        '',
+        '',
+        [UnidadePipeline],
+        [ {data: funil.value}],
+        700,
+        () => {
+          console.log('Confirmado')
+        }
+      )
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 </script>
 
 <style scoped>
@@ -219,5 +255,13 @@ const getHealthLabel = (item: any) => {
 .metric {
   display: flex;
   flex-direction: column;
+}
+
+.open-funil-btn {
+  width: 36px;
+  height: 36px;
+  border-color: rgba(var(--v-border-color), 0.35);
+  border-radius: 8px;
+  background-color: white;
 }
 </style>

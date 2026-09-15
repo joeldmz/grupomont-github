@@ -254,35 +254,65 @@ export const getHistoricoFunilConsolidado = async(req, res, next) => {
 
 export const getFunilByUnidade = async(req, res, next) => {
     try {
-        const { unidade_negocio_id, start_date, end_date } = req.query
+        const { status, unidade_negocio_id, start_date, end_date } = req.query
         let query = `
         SELECT
             ef.id AS etapa_id,
             ef.nome AS etapa,
             COUNT(DISTINCT o.id) AS quantidade_clientes,
-            COALESCE(SUM(o.valor_estimado), 0) AS valor_pipeline,
             COALESCE(
-                SUM(o.valor_estimado * COALESCE(o.probabilidade, 0) / 100),
+                SUM(o.valor_estimado),
+                0
+            ) AS valor_pipeline,
+            ROUND(
+                COALESCE(
+                    AVG(o.probabilidade),
+                    0
+                ),
+                1
+            ) AS probabilidade_media,
+            COALESCE(
+                SUM(
+                    o.valor_estimado
+                    * COALESCE(o.probabilidade, 0)
+                    / 100
+                ),
                 0
             ) AS valor_ponderado
         FROM public.etapa_funil ef
         LEFT JOIN public.oportunidade o
             ON o.etapa_id = ef.id
-        AND o.status NOT IN ('Perdida')
-        AND($1::numeric IS NULL OR o.unidade_negocio_id = $1::numeric)
-        AND ($2::date IS NULL OR o.data_criacao >= $2::date)
-        AND ($3::date IS NULL OR o.data_criacao < $3::date)
+            AND (
+                $1::text[] IS NULL
+                OR LOWER(o.status) = ANY(
+                    SELECT LOWER(status)
+                    FROM unnest($1::text[]) AS status
+                )
+            )
+            AND (
+                $2::bigint IS NULL
+                OR o.unidade_negocio_id = $2::bigint
+            )
+            AND (
+                $3::date IS NULL
+                OR o.data_criacao >= $3::date
+            )
+            AND (
+                $4::date IS NULL
+                OR o.data_criacao < $4::date
+            )
         WHERE
-        (
-            $1::numeric IS NULL
-            OR ef.unidade_negocio_id = $1::numeric
-        )
+            (
+                $2::bigint IS NULL
+                OR ef.unidade_negocio_id = $2::bigint
+            )
         GROUP BY
             ef.id,
             ef.nome,
             ef.ordem
-        ORDER BY ef.ordem;`
-        const dbresponse = await dbquery(query, [ unidade_negocio_id, start_date, end_date ])
+        ORDER BY
+            ef.ordem;`
+        const dbresponse = await dbquery(query, [status?.length ? status : null, unidade_negocio_id, start_date, end_date ])
         res.json((dbresponse).rows)
     } catch (error) {
         next(error);

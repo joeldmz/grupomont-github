@@ -69,7 +69,7 @@ const operacoes = ref<any>([])
 onMounted(async() => {
   try {
     mainData.value = await getMainData()
-    funil.value = await getFunilByUnidade({ unidade_negocio_id: 2 })
+    funil.value = await getFunilByUnidade({ unidade_negocio_id: 2, status: ['Aberta', 'Ganha'] })
     operacoes.value = await getOperacoes()
   } catch (error) {
     console.error('Erro ao buscar dados do cliente:', error)

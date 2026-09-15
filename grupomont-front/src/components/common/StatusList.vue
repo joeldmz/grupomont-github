@@ -74,7 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const setItem = async(item: any) => {
     try {
-        oportunidade.value = await getOportunidadeAndEtapa({ unidade_negocio_id: props.unidade_id , etapa_id: Number(item.etapa_id) })
+        oportunidade.value = await getOportunidadeAndEtapa({ unidade_negocio_id: props.unidade_id , etapa_id: Number(item.etapa_id), status: ['Aberta', 'Ganha'] })
         abrirDialog(
         '',
         '',
