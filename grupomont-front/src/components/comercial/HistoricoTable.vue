@@ -36,12 +36,13 @@
         <td>{{ item.etapa }}</td>
         <td>
           <v-chip
+            v-if="item.total_oportunidades > 0"
             class="ma-2"
             :color="getSaude(item)"
             size="small"
             label
           >
-            {{ getSaude(item) === 'success' ?  `Saudavel` : `Requer atencao` }} 
+            {{ getSaude(item) === 'success' ?  `Saudavel` : `Atenção` }} 
           </v-chip>
         </td>
         <td>{{ item.total_oportunidades }}</td>

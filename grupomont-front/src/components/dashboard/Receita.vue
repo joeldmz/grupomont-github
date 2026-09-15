@@ -62,11 +62,9 @@ const headers: any[] = [
 { key: 'acoes', title: '' },
 ]
 
-const conversao = computed(() => {
-    return (oportunidade: number, ganha: number) => {
-        return ganha / oportunidade * 100
-    }
-})
+const conversao = (oportunidade: number, ganha: number) => {
+    return ganha / oportunidade * 100
+}
 
 
 const getColor = (value: number) => {

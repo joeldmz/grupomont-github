@@ -2,7 +2,7 @@ import { dbquery } from '../config/database.js';
 
 export const getTotalReceita = async(req, res, next) => {
      try {
-        const {data_inicio, data_fim} = req.query;
+        const {start_date, end_date} = req.query;
         let query = `
         WITH oportunidades AS (
             SELECT
@@ -55,7 +55,7 @@ export const getTotalReceita = async(req, res, next) => {
         WHERE un.id IN (1, 2, 3)
         ORDER BY un.id;
         `;
-        const dbresult = await dbquery(query, [data_inicio, data_fim]);
+        const dbresult = await dbquery(query, [start_date, end_date]);
         res.json(dbresult.rows);
     } catch (error) {
         next(error);

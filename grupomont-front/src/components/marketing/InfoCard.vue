@@ -34,9 +34,13 @@
       type="number"
     />
 
-    <!-- <v-divider class="py-2"></v-divider>
+    <v-divider class="py-2"></v-divider>
 
-    <v-sheet variant="tonal" class="pa-4" rounded="lg">
+    <v-chip :color="getColor(conversao(data[0].leads , data[0].oportunidades))">
+      {{ `${conversao(data[0].leads , data[0].oportunidades)}% Conversao Lead → Oportunidade` }}
+    </v-chip>
+
+    <!--<v-sheet variant="tonal" class="pa-4" rounded="lg">
       <div class="d-flex justify-space-between align-center mb-1">
         <span class="text-caption text-medium-emphasis font-weight-medium">Investimento</span>
         <span class="text-h6 font-weight-medium text-primary">R$ 8.000</span>
@@ -64,8 +68,21 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 watch(() => props.data, (value) => {
-  console.log(value)
 }, { immediate: true })
+
+const conversao = (lead: number, oportunidades: number) => {
+    return oportunidades / lead * 100
+}
+
+const getColor = (value: number) => {
+  if (value >= 100) {
+    return 'green'
+  } else if (value >= 70) {
+    return 'orange'
+  } else {
+    return 'red'
+  }
+}
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR')

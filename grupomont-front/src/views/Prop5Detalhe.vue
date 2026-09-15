@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <!-- Header -->
-    <div class="d-flex align-center mb-6">
+    <div class="d-flex justify-space-between align-start mb-6">
       <div>
         <h1 class="text-h4">
           Prop5
@@ -10,6 +10,11 @@
           Visão detalhada da unidade de negócio
         </p>
       </div>
+      <DateRangeSelector
+        :start-date="dateRange.start_date"
+        :end-date="dateRange.end_date"
+        @change="loadProp5"
+      />
     </div>
     <v-row class="py-4">
       <v-col
@@ -58,6 +63,7 @@
 import BasicCard from '@/components/common/BasicCard.vue'
 import StatusList from '@/components/common/StatusList.vue'
 import OperacaoList from '@/components/prop5/OperacaoList.vue'
+import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
 import { getFunilByUnidade } from '@/services/funilService'
 import { getMainData, getOperacoes } from '@/services/operacaoService'
 import { onMounted, ref } from 'vue';
@@ -65,15 +71,22 @@ import { onMounted, ref } from 'vue';
 const mainData = ref<any>({})
 const funil = ref<any>([])
 const operacoes = ref<any>([])
+const dateRange = ref<DateRange>({
+  start_date: '2026-01-01',
+  end_date: '2026-12-31',
+})
 
-onMounted(async() => {
+const loadProp5 = async (range = dateRange.value) => {
+  dateRange.value = range
   try {
-    mainData.value = await getMainData()
-    funil.value = await getFunilByUnidade({ unidade_negocio_id: 2, status: ['Aberta', 'Ganha'] })
-    operacoes.value = await getOperacoes()
+    mainData.value = await getMainData(range)
+    funil.value = await getFunilByUnidade({ ...range, unidade_negocio_id: 2, status: ['Aberta', 'Ganha'] })
+    operacoes.value = await getOperacoes(range)
   } catch (error) {
     console.error('Erro ao buscar dados do cliente:', error)
   }
-})
+}
+
+onMounted(() => loadProp5())
 
 </script>

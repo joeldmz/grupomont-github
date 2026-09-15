@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <!-- Header -->
-    <div class="d-flex align-center pb-6">
+    <div class="d-flex justify-space-between align-start pb-6">
       <div>
         <h1 class="text-h4">
           TechBrabo
@@ -10,6 +10,11 @@
           Visão detalhada da unidade de negócio
         </p>
       </div>
+      <DateRangeSelector
+        :start-date="dateRange.start_date"
+        :end-date="dateRange.end_date"
+        @change="loadTechbrabo"
+      />
     </div>
     <v-row>
       <v-col
@@ -68,6 +73,7 @@
 import BasicCard from '@/components/common/BasicCard.vue'
 import StatusList from '@/components/common/StatusList.vue'
 import ProjetoList from '@/components/techbrabo/ProjetoList.vue'
+import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
 import { getFunilByUnidade } from '@/services/funilService'
 import { getMainKpis, getProjetos } from '@/services/projetoService'
 import { onMounted, ref } from 'vue';
@@ -75,16 +81,22 @@ import { onMounted, ref } from 'vue';
 const mainKpis = ref<any>({})
 const funil = ref<any>([])
 const projetos = ref<any>([])
+const dateRange = ref<DateRange>({
+  start_date: '2026-01-01',
+  end_date: '2026-12-31',
+})
 
-
-onMounted(async() => {
+const loadTechbrabo = async (range = dateRange.value) => {
+  dateRange.value = range
   try {
-      mainKpis.value = await getMainKpis()
-      funil.value = await getFunilByUnidade({ unidade_negocio_id: 3, status: ['Aberta', 'Ganha'] })
-      projetos.value = await getProjetos()
+      mainKpis.value = await getMainKpis(range)
+      funil.value = await getFunilByUnidade({ ...range, unidade_negocio_id: 3, status: ['Aberta', 'Ganha'] })
+      projetos.value = await getProjetos(range)
   } catch (error) {
     
   }
-})
+}
+
+onMounted(() => loadTechbrabo())
 
 </script>

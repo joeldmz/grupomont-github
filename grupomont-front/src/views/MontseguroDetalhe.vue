@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <!-- Header -->
-    <div class="d-flex align-center mb-6">
+    <div class="d-flex justify-space-between align-start mb-6">
       <div>
         <h1 class="text-h4">
           Montseguro
@@ -11,6 +11,11 @@
           Visão detalhada da unidade de negócio
         </p>
       </div>
+      <DateRangeSelector
+        :start-date="dateRange.start_date"
+        :end-date="dateRange.end_date"
+        @change="loadMontseguro"
+      />
     </div>  
     <v-row class="py-4">
       <v-col
@@ -75,6 +80,7 @@ import ContratacaoChart from '@/components/montseguro/ContratacaoChart.vue'
 import { getContratacaoByOperadora, getContratacaoByperiodo, getContratacaoByPlano } from '@/services/contratacaoService.ts'
 import OperadoraCard from '@/components/montseguro/OperadoraCard.vue'
 import StatusList from '@/components/common/StatusList.vue'
+import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
 
 
 const totalClientes = ref<any>({})
@@ -85,22 +91,28 @@ const funil = ref<any>([])
 const periodosContratacao = ref<any>([])
 const contratacaoByPlano = ref<any>([])
 const contratacaoByOperadora = ref<any>([])
+const dateRange = ref<DateRange>({
+  start_date: '2026-01-01',
+  end_date: '2026-12-31',
+})
 
-
-onMounted(async () => {
+const loadMontseguro = async (range = dateRange.value) => {
+  dateRange.value = range
   try {
-    totalClientes.value = await getTotalClientes( { status: 'Ativa' } )
-    totalReceita.value = await getTotalReceitaByUnidade({ unidade_negocio_id: 1 })
-    valorMensalCarteira.value = await getValorMensalCarteria({ unidade_negocio_id: 1 })
-    clientes.value = await getClientes({ unidade_negocio_id: 1, etapa_id: 7 })
-    funil.value = await getFunilByUnidade({ unidade_negocio_id: 1, status: ['Aberta', 'Ganha'] })
-    periodosContratacao.value = await getContratacaoByperiodo({ interval: 3 }) // so para monseguro
-    contratacaoByPlano.value = await getContratacaoByPlano()
-    contratacaoByOperadora.value = await getContratacaoByOperadora()
+    totalClientes.value = await getTotalClientes({ ...range, status: 'Ativa' })
+    totalReceita.value = await getTotalReceitaByUnidade({ ...range, unidade_negocio_id: 1 })
+    valorMensalCarteira.value = await getValorMensalCarteria({ ...range, unidade_negocio_id: 1 })
+    clientes.value = await getClientes({ ...range, unidade_negocio_id: 1, etapa_id: 7 })
+    funil.value = await getFunilByUnidade({ ...range, unidade_negocio_id: 1, status: ['Aberta', 'Ganha'] })
+    periodosContratacao.value = await getContratacaoByperiodo({ ...range, interval: 3 })
+    contratacaoByPlano.value = await getContratacaoByPlano(range)
+    contratacaoByOperadora.value = await getContratacaoByOperadora(range)
   } catch (error) {
     console.error('Erro ao buscar dados do cliente:', error)
   }
-})
+}
+
+onMounted(() => loadMontseguro())
 
 
 const getData = computed(() => {

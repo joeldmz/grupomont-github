@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <div class="d-flex justify-space-between">
+    <div class="d-flex justify-space-between align-start mb-6">
         <div class="mb-6">
           <h1 class="text-h4">
             Dashboard
@@ -10,7 +10,11 @@
             Visão Executiva
           </p>
         </div>
-        <!-- <v-chip v-if="receita" size="small">{{ 'Periodo de analise - ' + formattedDate }}</v-chip> -->
+      <DateRangeSelector
+        :start-date="dateRange.start_date"
+        :end-date="dateRange.end_date"
+        @change="loadDashboard"
+      />
     </div>
   
     <v-row class="py-3">
@@ -88,25 +92,32 @@ import { getMeta } from '@/services/metaService.ts'
 import Investimento from '@/components/dashboard/Investimento.vue'
 import Receita from '@/components/dashboard/Receita.vue'
 import Periodo from '@/components/dashboard/Periodo.vue'
+import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
 
 const campanhasByUnidade = ref<any[]>([])
 const receitaByUnidade = ref<any[]>([])
 const pipelineByOportunidade = ref<any[]>([])
 const metaGeral = ref<any[]>([])
 const receitaByPerido = ref<any[]>([])
+const dateRange = ref<DateRange>({
+  start_date: '2026-01-01',
+  end_date: '2026-12-31',
+})
 
-
-onMounted(async () => {
+const loadDashboard = async (range = dateRange.value) => {
+  dateRange.value = range
   try {
-    receitaByUnidade.value = await getTotalReceita()
-    campanhasByUnidade.value = await getTotalCampanhas()
-    pipelineByOportunidade.value = await getPipelineByUnidade()
+    receitaByUnidade.value = await getTotalReceita(range)
+    campanhasByUnidade.value = await getTotalCampanhas(range)
+    pipelineByOportunidade.value = await getPipelineByUnidade(range)
     metaGeral.value = await getMeta({ tipo: 'Receita', meta_geral: true })
-    receitaByPerido.value = await getReceitaByPeriodo()
+    receitaByPerido.value = await getReceitaByPeriodo(range)
   } catch (error) {
     console.error('Erro ao carregar unidades:', error)
   }
-})
+}
+
+onMounted(() => loadDashboard())
 
 
 const totalReceita = computed(() => {

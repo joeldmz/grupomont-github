@@ -1,13 +1,20 @@
 <template>
   <v-container fluid>
-    <div class="mb-6">
-      <h1 class="text-h4">
-        Comercial
-      </h1>
+    <div class="d-flex justify-space-between align-start mb-6">
+      <div>
+        <h1 class="text-h4">
+          Comercial
+        </h1>
 
-      <p class="text-body-2 text-medium-emphasis">
-        Desempenho e volumen comrecial
-      </p>
+        <p class="text-body-2 text-medium-emphasis">
+          Desempenho e volumen comrecial
+        </p>
+      </div>
+      <DateRangeSelector
+        :start-date="rangoData.start_date"
+        :end-date="rangoData.end_date"
+        @change="loadComercial"
+      />
     </div>
     <v-row class="py-3">
         <v-col cols="12" md="3">
@@ -61,6 +68,7 @@ import TotalCard from '@/components/comercial/TotalCard.vue'
 import { getPipelineOportunidade, getPipelineOportunidadeByUnidade } from '@/services/overviewService.ts'
 import BasicCard from '@/components/common/BasicCard.vue'
 import EquipePerformance from '@/components/comercial/EquipePerformance.vue'
+import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
 
 const oportunidadePipeline = ref<any>({})
 const oportunidadePipelineByUnidade = ref<any>({})
@@ -69,23 +77,26 @@ const funilConsolidado = ref<any[]>([])
 const funilHistoricoConsolidado = ref<any[]>([])
 const oportunidadeByEquipe = ref<any>([])
 
-const rangoData = ref({
-  start_date: '2026-08-01',
-  end_date: '2026-08-31'
+const rangoData = ref<DateRange>({
+  start_date: '2026-01-01',
+  end_date: '2026-12-31'
 })
 
-onMounted(async () => {
+const loadComercial = async (range = rangoData.value) => {
+  rangoData.value = range
   try {
-    totalOportunidade.value = await getTotalOportunidade()
-    oportunidadePipeline.value = await getPipelineOportunidade()
-    oportunidadePipelineByUnidade.value = await getPipelineOportunidadeByUnidade()
-    funilConsolidado.value = await getFunilConsolidado({ status: ['Aberta'], start_data: rangoData.value.start_date , end_date: rangoData.value.end_date })
-    funilHistoricoConsolidado.value = await getHistoricoFunilConsolidado({ status: ['Aberta'], start_data: rangoData.value.start_date , end_date: rangoData.value.end_date })
-    oportunidadeByEquipe.value = await getOportunidadeByEquipe()
+    totalOportunidade.value = await getTotalOportunidade(range)
+    oportunidadePipeline.value = await getPipelineOportunidade(range)
+    oportunidadePipelineByUnidade.value = await getPipelineOportunidadeByUnidade(range)
+    funilConsolidado.value = await getFunilConsolidado({ ...range, status: ['Aberta'] })
+    funilHistoricoConsolidado.value = await getHistoricoFunilConsolidado({ ...range, status: ['Aberta'] })
+    oportunidadeByEquipe.value = await getOportunidadeByEquipe(range)
   } catch (error) {
     console.error('Erro ao carregar unidades:', error)
   }
-})
+}
+
+onMounted(() => loadComercial())
 
 const getPersentage = computed(() => {
   if(!oportunidadePipeline) return 0
