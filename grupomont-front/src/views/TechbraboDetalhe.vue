@@ -22,7 +22,7 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Clientes" :value="mainKpis.quantidade_clientes ?? 0" />
+        <BasicCard title="Projetos" :value="mainKpis.quantidade_projetos ?? 0" />
       </v-col>
 
       <v-col
@@ -30,7 +30,11 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Projetos" :value="mainKpis.quantidade_projetos ?? 0" />
+        <BasicCard title="Progresso Medio" :value="Number(progresso.progresso_medio).toFixed(0)"  format="percentage">
+          <template #info>
+                <span :class="`text-${getColor(progresso.progresson_medio)}`">{{ getProgressMessage(progresso.progresso_medio) }}</span>
+          </template>
+        </BasicCard>
       </v-col>
 
       <v-col
@@ -75,13 +79,14 @@ import StatusList from '@/components/common/StatusList.vue'
 import ProjetoList from '@/components/techbrabo/ProjetoList.vue'
 import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
 import { getFunilByUnidade } from '@/services/funilService'
-import { getMainKpis, getProjetos } from '@/services/projetoService'
-import { onMounted, ref } from 'vue';
+import { getMainKpis, getProgresso, getProjetos } from '@/services/projetoService'
+import { computed, onMounted, ref } from 'vue';
 import type { FunilItem, TechbraboMainKpis } from '@/types/api'
 
 const mainKpis = ref<TechbraboMainKpis>({})
 const funil = ref<FunilItem[]>([])
 const projetos = ref<Record<string, unknown>[]>([])
+const progresso = ref<any>({})
 const dateRange = ref<DateRange>({
   start_date: '2026-01-01',
   end_date: '2026-12-31',
@@ -93,11 +98,39 @@ const loadTechbrabo = async (range = dateRange.value) => {
       mainKpis.value = await getMainKpis(range)
       funil.value = await getFunilByUnidade({ ...range, unidade_negocio_id: 3, status: ['Aberta', 'Ganha'] })
       projetos.value = await getProjetos(range)
+      progresso.value = await getProgresso()
   } catch (error) {
     
   }
 }
 
 onMounted(() => loadTechbrabo())
+
+const getColor = (value: number) => {
+  if (value >= 90) {
+    return 'red'
+  } else if (value >= 75) {
+    return 'orange'
+  } else {
+    return 'green'
+  }
+}
+
+const getProgressMessage = (progress: number) => {
+  if (progress >= 90) {
+    return 'Conclusão se aproximando'
+  }
+
+  if (progress >= 75) {
+    return 'Prazo se aproximando'
+  }
+
+  if (progress >= 50) {
+    return 'Projetos em andamento'
+  }
+
+  return 'Projetos no prazo'
+}
+
 
 </script>

@@ -18,7 +18,7 @@
         </template>
 
         <template v-slot:item.saude="{ item }">
-            <v-chip v-if="item.status !== 'Concluido'" 
+            <v-chip v-if="item.status !== 'Entregue'" 
                     :color="Number(progressoTemporal(item)) >= 80 ? 'orange' : 'success'" 
                     size="small"
                     >

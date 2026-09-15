@@ -42,7 +42,7 @@
                       format="currency">
                 <template #info>
                     <span style="font-weight: 900;">{{ `R$ ${getPonderado.toFixed(2)} - ` }}</span>
-                    <span :class="`text-${getColor(getPercentajeProbabilidade)}`">{{ `%${getPercentajeProbabilidade.toFixed(0)} probabilidade` }}</span>
+                    <span :class="`text-${getColor(getPercentajeProbabilidade)}`">{{ `${getPercentajeProbabilidade.toFixed(0)}% probabilidade` }}</span>
                 </template>
           </basic-card>
       </v-col>
@@ -52,7 +52,7 @@
           <basic-card title="Oportunidades" 
                       :value="getTotalOportunidades">
                 <template #info>
-                    <span :class="`text-${getColor(getPrecentajeConversao)}`">{{ `%${getPrecentajeConversao.toFixed(0)} Conversão oportunidade → ganha` }}</span>
+                    <span :class="`text-${getColor(getPrecentajeConversao)}`">{{ `${getPrecentajeConversao.toFixed(0)}% Conversão oportunidade → ganha` }}</span>
                 </template>
           </basic-card>
       </v-col>

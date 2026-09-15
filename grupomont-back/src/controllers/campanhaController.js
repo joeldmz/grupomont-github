@@ -6,66 +6,82 @@ export const getTotalCampanhas = async(req, res, next) => {
         let query = `
         WITH campanhas AS (
             SELECT
-                c.id,
                 c.unidade_negocio_id,
-                COALESCE(c.investimento, 0) AS investimento
+                COALESCE(SUM(c.investimento), 0) AS investimento
             FROM public.campanha c
             WHERE c.unidade_negocio_id IS NOT NULL
             AND ($1::date IS NULL OR c.data_inicio >= $1::date)
             AND ($2::date IS NULL OR c.data_inicio < $2::date)
             AND ($3::varchar IS NULL OR c.status = $3::varchar)
+            GROUP BY c.unidade_negocio_id
         ),
-        comercial AS (
+        leads AS (
+
             SELECT
-                o.campanha_id,
-                COUNT(DISTINCT o.lead_id) AS leads,
+                l.unidade_negocio_id,
+                COUNT(DISTINCT l.id) AS leads
+            FROM public.lead l
+            WHERE ($1::date IS NULL OR l.data_entrada >= $1::date)
+            AND ($2::date IS NULL OR l.data_entrada < $2::date)
+            GROUP BY l.unidade_negocio_id
+
+        ),
+        oportunidades AS (
+            SELECT
+                o.unidade_negocio_id,
                 COUNT(DISTINCT o.id) AS oportunidades,
                 COUNT(DISTINCT o.id) FILTER (
                     WHERE o.status = 'Ganha'
                 ) AS oportunidades_ganhas,
-                COALESCE(SUM(o.valor_estimado), 0) AS valor_pipeline,
+                COALESCE(
+                    SUM(o.valor_estimado),
+                    0
+                ) AS valor_pipeline,
                 COALESCE(
                     SUM(
-                        o.valor_estimado * COALESCE(o.probabilidade, 0) / 100
+                        o.valor_estimado
+                        * COALESCE(o.probabilidade, 0)
+                        / 100
                     ),
                     0
                 ) AS valor_ponderado
             FROM public.oportunidade o
-            WHERE o.campanha_id IS NOT NULL
-            GROUP BY o.campanha_id
+            WHERE ($1::date IS NULL OR o.data_criacao >= $1::date)
+            AND ($2::date IS NULL OR o.data_criacao < $2::date)
+            GROUP BY o.unidade_negocio_id
         ),
+
         receitas AS (
             SELECT
-                o.campanha_id,
+                r.unidade_negocio_id,
                 COALESCE(SUM(r.valor), 0) AS receita_realizada
             FROM public.receita r
-            INNER JOIN public.oportunidade o
-                ON o.id = r.oportunidade_id
-            WHERE o.campanha_id IS NOT NULL
-            AND r.status = 'Realizada'
-            GROUP BY o.campanha_id
+            WHERE r.status = 'Realizada'
+            AND ($1::date IS NULL OR r.data >= $1::date)
+            AND ($2::date IS NULL OR r.data < $2::date)
+            GROUP BY r.unidade_negocio_id
         )
+
         SELECT
             un.id AS unidade_negocio_id,
             un.nome AS unidade_negocio,
-            COALESCE(SUM(c.investimento), 0) AS investimento,
-            COALESCE(SUM(com.leads), 0) AS leads,
-            COALESCE(SUM(com.oportunidades), 0) AS oportunidades,
-            COALESCE(SUM(com.valor_pipeline), 0) AS valor_pipeline,
-            COALESCE(SUM(com.valor_ponderado), 0) AS valor_ponderado,
-            COALESCE(SUM(com.oportunidades_ganhas), 0) AS oportunidades_ganhas,
-            COALESCE(SUM(r.receita_realizada), 0) AS receita_realizada
+            COALESCE(c.investimento, 0) AS investimento,
+            COALESCE(l.leads, 0) AS leads,
+            COALESCE(o.oportunidades, 0) AS oportunidades,
+            COALESCE(o.valor_pipeline, 0) AS valor_pipeline,
+            COALESCE(o.valor_ponderado, 0) AS valor_ponderado,
+            COALESCE(o.oportunidades_ganhas, 0) AS oportunidades_ganhas,
+            COALESCE(r.receita_realizada, 0) AS receita_realizada
         FROM public.unidade_negocio un
         LEFT JOIN campanhas c
             ON c.unidade_negocio_id = un.id
-        LEFT JOIN comercial com
-            ON com.campanha_id = c.id
+        LEFT JOIN leads l
+            ON l.unidade_negocio_id = un.id
+        LEFT JOIN oportunidades o
+            ON o.unidade_negocio_id = un.id
         LEFT JOIN receitas r
-            ON r.campanha_id = c.id
+            ON r.unidade_negocio_id = un.id
         WHERE un.id IN (1, 2, 3)
-        GROUP BY
-            un.id,
-            un.nome
         ORDER BY un.id;
         `
         const dbresult = await dbquery(query, [start_date, end_date, status]);

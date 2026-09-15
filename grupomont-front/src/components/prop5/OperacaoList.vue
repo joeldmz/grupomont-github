@@ -29,11 +29,19 @@
         </template>
 
         <template v-slot:item.valor_concluido="{ item }">
-            <span style="font-weight: bold;">{{  `R$ ${item.valor_concluido}` }}</span>
+            <span style="font-weight: bold;">{{ item.valor_concluido > 0 ?  `R$ ${item.valor_concluido}` : ' - '}}</span>
         </template>
 
         <template v-slot:item.valor_em_andamento="{ item }">
-            <span style="font-weight: bold;">{{  `R$ ${item.valor_em_andamento}` }}</span>
+            <span style="font-weight: bold;">{{ item.valor_em_andamento > 0 ? `R$ ${item.valor_em_andamento}` : ' - ' }}</span>
+        </template>
+
+        <template v-slot:item.valor_previsto="{ item }">
+            <span style="font-weight: bold;">{{ item.valor_previsto > 0 ? `R$ ${item.valor_previsto}` : ' - '}}</span>
+        </template>
+
+        <template v-slot:item.comissao_total="{ item }">
+            <span style="font-weight: bold;">{{ item.comissao_total > 0 ? `R$ ${item.comissao_total}` : ' - ' }}</span>
         </template>
 
         <template v-slot:item.data-table-expand="{ internalItem, isExpanded, toggleExpand }">
@@ -101,6 +109,8 @@ const headers: any[] = [
 { key: 'valor_total_operacoes', title: 'Valor Total' },
 { key: 'valor_concluido', title: 'Concluido' },
 { key: 'valor_em_andamento', title: 'En Andamento' },
+{ key: 'valor_previsto', title: 'Valor Previsto' },
+{ key: 'comissao_total', title: 'Comissao' },
 { key: 'acoes', title: '' },
 ]
 

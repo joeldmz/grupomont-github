@@ -15,3 +15,8 @@ export async function getDetalheProjeto(params?: Record<string, unknown>): Promi
   const response = await api.get<Record<string, unknown>[]>('/projeto/detalhe', { params })
   return response.data
 }
+
+export async function getProgresso(params?: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  const response = await api.get<Record<string, unknown>[]>('/projeto/progresso', { params })
+  return response.data
+}

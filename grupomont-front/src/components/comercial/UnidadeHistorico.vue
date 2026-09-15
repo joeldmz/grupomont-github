@@ -1,10 +1,10 @@
 <template>
-  <v-card style="height: 100%;" elevation="0">
+  <v-card style="height: 100%;">
     <v-card-item class="pb-0">
       <v-card-title class="d-flex justify-space-between font-weight-bold">
         
         <span>
-          Pipeline
+          Performance
         </span>
         <v-select
           label="Unidade"
@@ -21,7 +21,7 @@
       </v-card-title>
 
       <v-card-subtitle>
-        Estágio atual de oportunidades por etapa
+        Conversão e tempo médio por etapa
       </v-card-subtitle>
     </v-card-item>
 
@@ -80,7 +80,7 @@
 <script setup lang="ts">
 import { abrirDialog } from '@/composables/UseDialog';
 import { getFunilByUnidade, getHistoricoFunilByUnidade } from '@/services/funilService';
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 interface Props {
   title?: string
@@ -117,6 +117,8 @@ const headers: any = [
 
 const unidadeSelecionada = ref<number | null>(1)
 const funil = ref<any[]>(props.data ?? [])
+
+onMounted(() => onUnidadeChange(1))
 
 const onUnidadeChange = async(unidadeId: number | null) => {
   unidadeSelecionada.value = unidadeId

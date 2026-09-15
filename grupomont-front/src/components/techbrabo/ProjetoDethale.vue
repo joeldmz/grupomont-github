@@ -32,7 +32,7 @@
             />
 
             <div class="d-flex justify-space-between mt-2">
-                <span v-if="projeto?.status_projeto !== 'Concluido'">{{ diasCorridos }} de {{ diasPrevistos }} dias</span>
+                <span v-if="projeto?.status_projeto !== 'Entregue'">{{ diasCorridos }} de {{ diasPrevistos }} dias</span>
                 <span style="font-weight: bold;">{{ getTextStatus }}</span>
             </div>
         </v-list-item>
@@ -73,7 +73,7 @@ const diasCorridos = computed(() => {
   const inicio = new Date(props.projeto.data_inicio)
 
   const fim =
-    props.projeto.status_projeto === 'Concluido' && props.projeto.data_entrega
+    props.projeto.status_projeto === 'Entregue' && props.projeto.data_entrega
       ? new Date(props.projeto.data_entrega)
       : new Date()
 
@@ -96,17 +96,17 @@ const progressoTemporal = computed(() => {
 
 const getColorStatus = computed(() => {
     if(!progressoTemporal.value) return 'grey'
-    return (progressoTemporal.value <= 80 || props.projeto.status_projeto === 'Concluido') ? 'success' : progressoTemporal.value > 100 ? 'error' : 'orange'
+    return (progressoTemporal.value <= 80 || props.projeto.status_projeto === 'Entregue') ? 'success' : progressoTemporal.value > 100 ? 'error' : 'orange'
 })
 
 const getTextStatus = computed(() => {
     if(!props.projeto.data_inicio && !props.projeto.data_previsao_entrega) return 'Sem previsão'
 
-    if(props.projeto.status_projeto === 'Concluido' && !props.projeto.data_entrega) return 'Sem data de entrega'
+    if(props.projeto.status_projeto === 'Entregue' && !props.projeto.data_entrega) return 'Sem data de entrega'
 
-    if(props.projeto.status_projeto === 'Concluido' && (new Date(props.projeto.data_entrega) <= new Date(props.projeto.data_previsao_entrega))) return 'Entregue no prazo'
+    if(props.projeto.status_projeto === 'Entregue' && (new Date(props.projeto.data_entrega) <= new Date(props.projeto.data_previsao_entrega))) return 'Entregue no prazo'
 
-    if(props.projeto.status_projeto === 'Concluido' && (new Date(props.projeto.data_entrega) > new Date(props.projeto.data_previsao_entrega))) return 'Entregue com atraso'
+    if(props.projeto.status_projeto === 'Entregue' && (new Date(props.projeto.data_entrega) > new Date(props.projeto.data_previsao_entrega))) return 'Entregue com atraso'
 
     if(new Date() <= new Date(props.projeto.data_previsao_entrega)) return 'No prazo'
 

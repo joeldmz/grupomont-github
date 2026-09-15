@@ -131,6 +131,11 @@ grupomont/
 │   ├── package.json
 │   └── package-lock.json
 │
+├── database/
+│   ├── schema.sql
+│   ├── views.sql
+│   └── seed.sql
+│
 └── README.md
 ```
 

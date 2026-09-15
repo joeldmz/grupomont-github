@@ -24,8 +24,12 @@
         <span>{{ item.quantidade_vidas ? `${item.quantidade_vidas}` : '-'}}</span>
     </template>
 
+    <template v-slot:item.pagamento>
+        <v-chip color="green">Em dia</v-chip>
+    </template>
+
     <template v-slot:item.valor_mensal_plano="{ item }">
-        <span>{{ item.valor_mensal_plano ? `R$${item.valor_mensal_plano}` : '-'}}</span>
+        <span style="font-weight: bold;">{{ item.valor_mensal_plano ? `R$${item.valor_mensal_plano}` : '-'}}</span>
     </template>
 
     <!-- <template v-slot:item.status_contratacao="{ item }">
@@ -62,8 +66,8 @@ const headers: any[] = [
 { key: 'plano', title: 'Plano' },
 { key: 'quantidade_vidas', title: 'Quantidade de Vidas' },
 { key: 'etapa', title: 'Etapa' },
-// { key: 'status_contratacao', title: 'Status' },
 { key: 'valor_mensal_plano', title: 'Valor/mês' },
+{ key: 'pagamento', title: 'Status Pagamento' },
 { key: 'consultor', title: 'Consultor' },
 ]
 

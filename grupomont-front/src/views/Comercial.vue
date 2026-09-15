@@ -49,12 +49,17 @@
             <EquipePerformance :data="oportunidadeByEquipe" />
         </v-col>
     </v-row>
-
     <v-row class="py-3">
+       <v-col cols="12">
+            <UnidadeHistorico />
+       </v-col> 
+    </v-row>
+
+    <!-- <v-row class="py-3">
         <v-col cols="12">
             <HistoricoTable :data="funilHistoricoConsolidado"/>
         </v-col>
-    </v-row>
+    </v-row> -->
   </v-container>
 </template>
 
@@ -70,6 +75,7 @@ import BasicCard from '@/components/common/BasicCard.vue'
 import EquipePerformance from '@/components/comercial/EquipePerformance.vue'
 import DateRangeSelector, { type DateRange } from '@/components/common/DateRangeSelector.vue'
 import type { FunilItem, OportunidadeEquipe, PipelineSummary, RevenueByUnit } from '@/types/api'
+import UnidadeHistorico from '@/components/comercial/UnidadeHistorico.vue'
 
 const oportunidadePipeline = ref<PipelineSummary>({})
 const oportunidadePipelineByUnidade = ref<RevenueByUnit[]>([])

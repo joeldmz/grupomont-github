@@ -186,3 +186,40 @@ export const getDetalheProjeto = async(req, res, next) => {
         next(error);
     }
 }
+
+
+export const getProgressoMedio = async(req, res, next) => {
+    try {
+        let query = `
+        SELECT
+            ROUND(
+                AVG(
+                    LEAST(
+                        100,
+                        GREATEST(
+                            0,
+                            (
+                                CURRENT_DATE - data_inicio
+                            )::numeric
+                            /
+                            NULLIF(
+                                (data_previsao_entrega - data_inicio),
+                                0
+                            ) * 100
+                        )
+                    )
+                ),
+                1
+            ) AS progresso_medio,
+            COUNT(*) AS projetos_em_andamento
+        FROM public.projeto
+        WHERE status = 'Em andamento'
+        AND data_inicio IS NOT NULL
+        AND data_previsao_entrega IS NOT NULL;
+        `;
+        const dbresult = await dbquery(query);
+        res.json(dbresult.rows.length > 0 ? dbresult.rows[0] : {});
+    } catch (error) {
+        next(error);
+    }
+}

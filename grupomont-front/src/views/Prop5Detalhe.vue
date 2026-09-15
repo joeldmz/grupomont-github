@@ -22,7 +22,7 @@
         sm="6"
         md="3"
       >
-        <BasicCard title="Clientes" :value="mainData.quantidade_clientes ?? 0" />
+        <BasicCard title="Operações" :value="operacoes.length ?? 0" />
       </v-col>
       <v-col
         cols="12"
