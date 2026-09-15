@@ -318,3 +318,120 @@ export const getFunilByUnidade = async(req, res, next) => {
         next(error);
     }
 }
+
+
+export const getFunilHistoricoByUnidade = async(req, res, next) => {
+    try {
+        const { status, unidade_negocio_id, start_date, end_date } = req.query
+        let query = `
+        WITH etapas AS (
+            SELECT
+                u.id AS unidade_negocio_id,
+                u.nome AS unidade_negocio,
+                ef.id AS etapa_id,
+                ef.nome AS etapa,
+                ef.ordem
+            FROM public.unidade_negocio u
+            INNER JOIN public.etapa_funil ef
+                ON ef.unidade_negocio_id = u.id
+            WHERE
+                (
+                    $2::bigint IS NULL
+                    OR u.id = $2::bigint
+                )
+        ),
+        historico AS (
+            SELECT
+                o.unidade_negocio_id,
+                h.etapa_id,
+                COUNT(DISTINCT h.oportunidade_id) AS oportunidades,
+                ROUND(
+                    AVG(
+                        EXTRACT(
+                            EPOCH FROM (
+                                COALESCE(
+                                    h.data_saida,
+                                    NOW()::timestamp
+                                ) - h.data_entrada
+                            )
+                        ) / 86400
+                    )::numeric,
+                    1
+                ) AS tempo_medio
+            FROM public.historico_oportunidade h
+            INNER JOIN public.oportunidade o
+                ON o.id = h.oportunidade_id
+            WHERE
+                (
+                    $1::text[] IS NULL
+                    OR LOWER(o.status) = ANY(
+                        SELECT LOWER(s)
+                        FROM unnest($1::text[]) AS s
+                    )
+                )
+
+                AND (
+                    $3::date IS NULL
+                    OR o.data_criacao >= $3::date
+                )
+
+                AND (
+                    $4::date IS NULL
+                    OR o.data_criacao < $4::date
+                )
+            GROUP BY
+                o.unidade_negocio_id,
+                h.etapa_id
+        ),
+        dados AS (
+            SELECT
+                e.*,
+
+                COALESCE(h.oportunidades, 0) AS oportunidades,
+                h.tempo_medio
+
+            FROM etapas e
+
+            LEFT JOIN historico h
+                ON h.unidade_negocio_id = e.unidade_negocio_id
+                AND h.etapa_id = e.etapa_id
+        ),
+        calculo AS (
+            SELECT
+                *,
+
+                LAG(oportunidades) OVER (
+                    PARTITION BY unidade_negocio_id
+                    ORDER BY ordem
+                ) AS oportunidades_anterior
+
+            FROM dados
+        )
+        SELECT
+            unidade_negocio_id,
+            unidade_negocio,
+            etapa_id,
+            etapa,
+            ordem,
+            oportunidades,
+            CASE
+                WHEN oportunidades_anterior IS NULL THEN NULL
+                WHEN oportunidades_anterior = 0 THEN 0
+                ELSE ROUND(
+                    oportunidades::numeric
+                    / oportunidades_anterior * 100,
+                    1
+                )
+            END AS taxa_conversao,
+            tempo_medio
+        FROM calculo
+        ORDER BY
+            unidade_negocio_id,
+            ordem;
+        `
+        const dbresponse = await dbquery(query, [status?.length ? status : null, unidade_negocio_id, start_date, end_date ])
+        res.json((dbresponse).rows)
+    } catch (error) {
+        next(error);
+    }
+}

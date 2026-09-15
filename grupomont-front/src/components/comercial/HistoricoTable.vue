@@ -2,8 +2,17 @@
   <v-card>
 
     <v-card-item class="pb-0">
-      <v-card-title class="font-weight-bold">
-        Performance
+      <v-card-title class="d-flex justify-space-between font-weight-bold">
+        <span>Performance</span>
+
+        <v-btn
+          class="open-funil-btn"
+          icon="mdi-arrow-expand"
+          variant="flat"
+          size="small"
+          aria-label="Abrir funil"
+          @click="openFunil"
+        />
       </v-card-title>
 
       <v-card-subtitle>
@@ -59,7 +68,12 @@
 </template>
 
 <script setup lang="ts">
+import { abrirDialog } from '@/composables/UseDialog';
+import { getHistoricoFunilByUnidade } from '@/services/funilService';
+import { ref } from 'vue';
+import UnidadeHistorico from './UnidadeHistorico.vue';
 
+const funil = ref<any>([])
 
 interface Props {
   title?: string,
@@ -118,6 +132,24 @@ const getHealthDias = (item: any) => {
     }
 
     return 'warning'
+}
+
+const openFunil = async() => {
+  try {
+      funil.value = await getHistoricoFunilByUnidade({ unidade_negocio_id: 1, status: ['Aberta', 'Ganha'] })
+      abrirDialog(
+        '',
+        '',
+        [UnidadeHistorico],
+        [{data: funil.value}],
+        1200,
+        () => {
+          console.log('Confirmado')
+        }
+      )
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 </script>
